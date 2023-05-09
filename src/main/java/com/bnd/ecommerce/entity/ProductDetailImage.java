@@ -1,5 +1,7 @@
 package com.bnd.ecommerce.entity;
 
+import org.hibernate.validator.constraints.URL;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,6 +11,7 @@ public class ProductDetailImage extends CreateTimestamp{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @URL
     private String url;
 
     private float size;

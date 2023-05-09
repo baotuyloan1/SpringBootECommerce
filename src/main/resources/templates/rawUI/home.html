@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Manager</title>
+</head>
+<body>
+<div align="center">
+    <h1>Category List</h1>
+    <a href="/rawUI/newCategory">Create New Category</a>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                <a>
+                   Category ID</a>
+            </th>
+            <th>
+                <a>Name</a>
+            </th>
+            <th>
+                <a>Description</a>
+            </th>
+            <th>
+                <a>Parent ID
+                </a></th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <div th:if="${not #lists.isEmpty(listCategories)}">
+            <tbody>
+            <tr th:each="category : ${listCategories}">
+                <td th:text="${category.id}">Category ID</td>
+                <td th:text="${category.name}">Name</td>
+                <td th:text="${category.description}">Description</td>
+                <td th:text="${category.parentCategory == null ? 'null' : category.parentCategory.id}">Parent</td>
+                <td>
+                    <a th:href="@{'/edit/' + ${category.id}}">Edit</a>
+                    <a th:href="@{'/delete/' + ${category.id}}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+    </table>
+    <br/>
+    <a href="/rawUI/newBrand"></a>
+    <h1>Product List</h1>
+    <a href="/rawUI/newPhone">Create New Phone</a>
+    <a href="/rawUI/newTablet">Create New Tablet</a>
+    <a href="/rawUI/newLaptop">Create New Phone</a>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                <a>
+                    Product ID</a>
+            </th>
+            <th>
+                <a>Name</a>
+            </th>
+            <th>
+                <a>Description</a>
+            </th>
+            <th>
+                <a>Price
+                </a></th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <div th:if="${not #lists.isEmpty(listProducts)}">
+            <tbody>
+            <tr th:each="product : ${listProducts}">
+                <td th:text="${product.id}">Product ID</td>
+                <td th:text="${product.name}">Name</td>
+                <td th:text="${product.description}">Description</td>
+                <td th:text="${product.price}">Price</td>
+                <td>
+                    <a th:href="@{'/edit/' + ${product.id}}">Edit</a>
+                    <a th:href="@{'/delete/' + ${product.id}}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+    </table>
+    <br/>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                <a>
+                    Product ID</a>
+            </th>
+            <th>
+                <a>Name</a>
+            </th>
+            <th>
+                <a>CPU</a>
+            </th>
+            <th>
+                <a>RAM</a>
+            </th>
+            <th>
+                <a>Hard Drive
+                </a>
+            </th>
+            <th>
+                <a>Graphics Card</a>
+            </th>
+
+            <th>
+                <a>Operating System</a>
+            </th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <div th:if="${not #lists.isEmpty(listLaptops)}">
+            <tbody>
+            <tr th:each="laptop : ${listLaptops}">
+                <td th:text="${laptop.product.id}">Product ID</td>
+                <td th:text="${laptop.product.name}">Name</td>
+                <td th:text="${laptop.cpu}">Cpu</td>
+                <td th:text="${laptop.ram}">Ram</td>
+                <td th:text="${laptop.hardDrive}">Hard Drive</td>
+                <td th:text="${laptop.graphicsCard}">Graphics Card</td>
+                <td th:text="${laptop.operatingSystem}">Operating System</td>
+                <td>
+                    <a th:href="@{'/edit/' + ${product.id}}">Edit</a>
+                    <a th:href="@{'/delete/' + ${product.id}}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+    </table>
+    <br/>
+    <br/>
+    <!--    <div><i>Sorted by [[${sortField}]] in [[${sortDir}]]</i></div>-->
+    <br/>
+    <br/>
+    <!--    <div>Total Items: [[${totalItems}]]-->
+    <!--        <a th:if="${currentPage > 1}"-->
+    <!--           th:href="@{'/page/1?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">First</a>-->
+    <!--        <span th:unless="${currentPage > 1}">First</span>-->
+    <!--        <a th:if="${currentPage > 1}"-->
+    <!--           th:href="@{'/page/'+${currentPage -1}+'?sortField='+${sortField}+'&sortDir='+${sortDir  }+${keyword == null ? '' : ('&keyword='+keyword)}}">Previous</a>-->
+    <!--        <span th:unless="${currentPage > 1}">Previous</span>-->
+
+    <!--        <span th:each="i : ${#numbers.sequence(1,totalPages)}">-->
+    <!--            <a th:if="${currentPage != i}"-->
+    <!--               th:href="@{'/page/' +${i} +'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">[[${i}]]</a>-->
+    <!--            <span th:unless="${currentPage != i}">[[${i}]]</span>-->
+    <!--             &nbsp;-->
+    <!--        </span>-->
+    <!--        <a th:if="${currentPage < totalPages}"-->
+    <!--           th:href="@{'/page/'+${currentPage+1}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">Next</a>-->
+    <!--        <span th:unless="${currentPage < totalPages}">Next</span>-->
+
+    <!--        <a th:if="${currentPage < totalPages}"-->
+    <!--           th:href="@{'/page/'+${totalPages}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">Last</a>-->
+    <!--        <span th:if="${currentPage >= totalPages}">Last</span>-->
+    <!--    </div>-->
+
+</div>
+</body>
+
+<!--<script type="text/javascript">-->
+<!--    function clearSearch() {-->
+<!--        window.location = "[[@{/}]]";-->
+<!--    }-->
+<!--</script>-->
+</html>

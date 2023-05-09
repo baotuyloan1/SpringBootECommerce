@@ -1,14 +1,18 @@
 package com.bnd.ecommerce.service.impl;
 
 import com.bnd.ecommerce.entity.Category;
+import com.bnd.ecommerce.exception.CategoryNotFoundException;
 import com.bnd.ecommerce.repository.CategoryRepository;
 import com.bnd.ecommerce.service.CategoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
@@ -18,4 +22,28 @@ public class CategoryServiceImpl implements CategoryService {
     public Category saveCategory(Category category) {
         return categoryRepository.save(category);
     }
+
+    @Override
+    public Category findById(Long id) {
+        Optional<Category> category = categoryRepository.findById(id);
+        if(category.isPresent()){
+            Category category1 = category.get();
+            return category1;
+        }else {
+            throw new CategoryNotFoundException();
+        }
+    }
+
+
+    @Override
+    public List<Category> listCategories() {
+        return categoryRepository.findAll();
+    }
+
+    @Override
+    public void deleteCategory(long id) {
+        categoryRepository.deleteById(id);
+    }
+
+
 }

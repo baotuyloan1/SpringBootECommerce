@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Product</title>
+</head>
+<body>
+<div align="center">
+    <h1>Create New Product</h1>
+    <br/>
+    <form th:action="@{/rawUI/savePhone}" th:object="${phone}" method="post">
+        <table border="0" cellpadding="10">
+            <tr>
+                <td>Product Name:</td>
+                <td><input type="text" th:field="*{product.name}"/></td>
+            </tr>
+            <tr>
+                <td>Brand:</td>
+                <td>
+                    <select th:field="*{product.brand}">
+                        <option th:each="i : ${brands}" th:value="${i.name}" th:text="${i.name}"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Description:</td>
+                <td>
+                 <input type="text" th:field="*{product.description}">
+                </td>
+            </tr>
+            <tr>
+                <td>Price:</td>
+                <td><input type="number" th:field="*{product.price}"/></td>
+            </tr>
+            <tr>
+                <td>Screen:</td>
+                <td><input type="string" th:field="*{screen}"/></td>
+            </tr>
+
+            <tr>
+                <td>Ram:</td>
+                <td><input type="string" th:field="*{ram}"/></td>
+            </tr>
+
+            <tr>
+                <td>Camera:</td>
+                <td><input type="string" th:field="*{camera}"/></td>
+            </tr>
+
+            <tr>
+                <td>BatteryCharge:</td>
+                <td><input type="string" th:field="*{batteryCharge}"/></td>
+            </tr>
+            <tr>
+                <td>Operating System:</td>
+                <td><input type="string" th:field="*{operatingSystem}"/></td>
+            </tr>
+
+            <tr>
+                <td>Storage Capacity:</td>
+                <td><input type="string" th:field="*{storageCapacity}"/></td>
+            </tr>
+
+            <tr>
+                <td>Front Facing Camera:</td>
+                <td><input type="string" th:field="*{frontFacingCamera}"/></td>
+            </tr>
+
+            <tr>
+                <td>Rear Camera:</td>
+                <td><input type="string" th:field="*{rearCamera}"/></td>
+            </tr>
+
+            <tr>
+                <td>Chip:</td>
+                <td><input type="string" th:field="*{chip}"/></td>
+            </tr>
+
+            <tr>
+                <td>Sim:</td>
+                <td><input type="string" th:field="*{sim}"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Save</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

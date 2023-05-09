@@ -1,20 +1,40 @@
 package com.bnd.ecommerce.entity;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
-import java.sql.Timestamp;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
-public class Product extends CreateUpdateTimeStamp{
+public class Product extends CreateUpdateTimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(nullable = false, unique = true, length = 512)
+    @NotBlank(message = "Product name cannot blank")
+    @Length(min = 5, max = 512, message = "Product name must be between 5-512 characters")
     private String name;
     private String description;
-    private String price;
+
+    @Min(value = 10, message = "Product price must be greater or equal to 10")
+    @Max(value = 50000, message = "Product price must be less than or equal to 50000")
+    private float price;
+
+    @ManyToOne
+    private Brand brand;
 
 
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
 
     @OneToMany(mappedBy = "product")
     private Set<ProductLog> productLog;
@@ -23,7 +43,7 @@ public class Product extends CreateUpdateTimeStamp{
     private ProductCategory category;
 
     @OneToMany(mappedBy = "product")
-    private Set<ProductDetailImage>  productDetailImages;
+    private Set<ProductDetailImage> productDetailImages;
 
 
     public long getId() {
@@ -50,14 +70,13 @@ public class Product extends CreateUpdateTimeStamp{
         this.description = description;
     }
 
-    public String getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(float price) {
         this.price = price;
     }
-
 
     public Set<ProductLog> getProductLog() {
         return productLog;
