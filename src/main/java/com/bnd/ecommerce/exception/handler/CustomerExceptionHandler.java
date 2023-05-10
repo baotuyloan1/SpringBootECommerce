@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+//ưu tiên sử lý các handleMethod ở class extends ResponseEntityExceptionHandler truo, không có thì nó nhảy vào class kia
 @ControllerAdvice
 public class CustomerExceptionHandler extends ResponseEntityExceptionHandler {
 

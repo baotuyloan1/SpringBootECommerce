@@ -2,8 +2,10 @@ package com.bnd.ecommerce.entity.employee;
 
 import com.bnd.ecommerce.entity.CreateTimestamp;
 import com.bnd.ecommerce.entity.Role;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 @Entity
 @Table(name = "employee")
@@ -14,6 +16,10 @@ public class Employee extends CreateTimestamp {
     private long id;
 
     private String name;
+
+    @UniqueElements
+    @Email
+    @Column(unique = true)
     private String email;
     private String password;
 

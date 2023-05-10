@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
 <head>
     <meta charset="UTF-8">
     <title>Product Manager</title>
 </head>
 <body>
 <div align="center">
+    <div th:if="${#httpServletRequest.userPrincipal != null }">
+        <h1>Hello [[${#httpServletRequest.remoteUser}]]</h1>
+        <div sec:authorize="hasRole('ADMIN')">
+            <a href="/rawUI/newCategory">Admin Cpanel</a>
+        </div>
+        <form th:action="@{/rawUI/logout}" method="post">
+            <input type="submit" value="Logout">
+        </form>
+    </div>
+
+    <div th:if="${param.logoutStatus}">
+        <h3>You have been logged out</h3>
+    </div>
+
+
     <h1>Category List</h1>
     <a href="/rawUI/newCategory">Create New Category</a>
     <br/>
@@ -16,7 +33,7 @@
         <tr>
             <th>
                 <a>
-                   Category ID</a>
+                    Category ID</a>
             </th>
             <th>
                 <a>Name</a>
@@ -30,6 +47,7 @@
             <th>Actions</th>
         </tr>
         </thead>
+
         <div th:if="${not #lists.isEmpty(listCategories)}">
             <tbody>
             <tr th:each="category : ${listCategories}">
@@ -45,6 +63,29 @@
             </tbody>
         </div>
     </table>
+    <br/>
+    <div>Total Categories: [[${totalCategories}]]</div>
+    <a th:if="${currentPageCategories > 1}"
+       th:href="@{'/rawUI/page/1?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">First</a>
+    <span th:unless="${currentPageCategories > 1}">First</span>
+    <a th:if="${currentPageCategories > 1}"
+       th:href="@{'/rawUI/page/'+${currentPageCategories -1}+'?sortField='+${sortField}+'&sortDir='+${sortDir  }+${keyword == null ? '' : ('&keyword='+keyword)}}">Previous</a>
+    <span th:unless="${currentPageCategories > 1}">Previous</span>
+
+    <span th:each="i : ${#numbers.sequence(1,currentPageCategories)}">
+                <a th:if="${currentPageCategories != i}"
+                   th:href="@{'/rawUI/page/' +${i} +'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">[[${i}]]</a>
+                <span th:unless="${currentPageCategories != i}">[[${i}]]</span>
+                 &nbsp;
+            </span>
+    <a th:if="${currentPageCategories < totalPagesCategories}"
+       th:href="@{'/rawUI/page/'+${currentPageCategories+1}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">Next</a>
+    <span th:unless="${currentPageCategories < totalPagesCategories}">Next</span>
+
+    <a th:if="${currentPageCategories < totalPagesCategories}"
+       th:href="@{'/rawUI/page/'+${totalPagesCategories}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">Last</a>
+    <span th:if="${currentPageCategories >= totalPagesCategories}">Last</span>
+
     <br/>
     <a href="/rawUI/newBrand"></a>
     <h1>Product List</h1>
@@ -138,31 +179,10 @@
     </table>
     <br/>
     <br/>
-    <!--    <div><i>Sorted by [[${sortField}]] in [[${sortDir}]]</i></div>-->
+    <div><i>Sorted by [[${sortField}]] in [[${sortDir}]]</i></div>
     <br/>
     <br/>
-    <!--    <div>Total Items: [[${totalItems}]]-->
-    <!--        <a th:if="${currentPage > 1}"-->
-    <!--           th:href="@{'/page/1?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">First</a>-->
-    <!--        <span th:unless="${currentPage > 1}">First</span>-->
-    <!--        <a th:if="${currentPage > 1}"-->
-    <!--           th:href="@{'/page/'+${currentPage -1}+'?sortField='+${sortField}+'&sortDir='+${sortDir  }+${keyword == null ? '' : ('&keyword='+keyword)}}">Previous</a>-->
-    <!--        <span th:unless="${currentPage > 1}">Previous</span>-->
 
-    <!--        <span th:each="i : ${#numbers.sequence(1,totalPages)}">-->
-    <!--            <a th:if="${currentPage != i}"-->
-    <!--               th:href="@{'/page/' +${i} +'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">[[${i}]]</a>-->
-    <!--            <span th:unless="${currentPage != i}">[[${i}]]</span>-->
-    <!--             &nbsp;-->
-    <!--        </span>-->
-    <!--        <a th:if="${currentPage < totalPages}"-->
-    <!--           th:href="@{'/page/'+${currentPage+1}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">Next</a>-->
-    <!--        <span th:unless="${currentPage < totalPages}">Next</span>-->
-
-    <!--        <a th:if="${currentPage < totalPages}"-->
-    <!--           th:href="@{'/page/'+${totalPages}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">Last</a>-->
-    <!--        <span th:if="${currentPage >= totalPages}">Last</span>-->
-    <!--    </div>-->
 
 </div>
 </body>

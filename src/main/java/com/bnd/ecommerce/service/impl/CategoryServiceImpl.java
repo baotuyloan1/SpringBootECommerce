@@ -4,6 +4,10 @@ import com.bnd.ecommerce.entity.Category;
 import com.bnd.ecommerce.exception.CategoryNotFoundException;
 import com.bnd.ecommerce.repository.CategoryRepository;
 import com.bnd.ecommerce.service.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findById(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
-        if(category.isPresent()){
+        if (category.isPresent()) {
             Category category1 = category.get();
             return category1;
-        }else {
+        } else {
             throw new CategoryNotFoundException();
         }
     }
@@ -43,6 +47,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(long id) {
         categoryRepository.deleteById(id);
+    }
+
+
+    public Page<Category> listAll(int pageNum, String sortField, String sortDir, int size) {
+        Pageable pageable = PageRequest.of(pageNum -1 , size, sortDir.equals("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
+        return categoryRepository.findAll(pageable);
     }
 
 

@@ -25,6 +25,7 @@
         <td>
           <label>Parent Category:
             <select th:field="*{parentCategory}">
+              <option th:text="root" th:value="${null}"></option>
               <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
             </select>
           </label>
