@@ -1,4 +1,4 @@
-INSERT INTO category (name, description, create_time, update_time) 
+INSERT INTO category (name, description, create_time, update_time)
 VALUES 
 ('Smartphone', 'Mobile phones that offer advanced features beyond making phone calls and sending text messages.', GETDATE(), GETDATE()),
 ('Laptop', 'Portable computer that can be easily carried and used in a variety of locations.', GETDATE(), GETDATE()),

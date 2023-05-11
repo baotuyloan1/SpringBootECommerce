@@ -1,80 +1,87 @@
 package com.bnd.ecommerce.entity.employee;
 
 import com.bnd.ecommerce.entity.CreateTimestamp;
-import com.bnd.ecommerce.entity.Role;
-import org.hibernate.validator.constraints.UniqueElements;
-
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 @Table(name = "employee")
 public class Employee extends CreateTimestamp {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
-    private String name;
+  private String firstName;
+  private String lastName;
 
-    @UniqueElements
-    @Email
-    @Column(unique = true)
-    private String email;
-    private String password;
+  @UniqueElements
+  @Email
+  @Column(unique = true)
+  private String email;
 
+  private String password;
 
-    private String phone;
+  private String phone;
 
-    public String getPhone() {
-        return phone;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+  @OneToMany(mappedBy = "employee")
+  private Set<EmployeeRole> employeeRoles;
 
-    public long getId() {
-        return id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public Set<EmployeeRole> getEmployeeRoles() {
+    return employeeRoles;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setEmployeeRoles(Set<EmployeeRole> employeeRoles) {
+    this.employeeRoles = employeeRoles;
+  }
 
-    public Role getRole() {
-        return role;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 }

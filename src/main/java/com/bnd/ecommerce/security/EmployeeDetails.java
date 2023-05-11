@@ -1,8 +1,11 @@
 package com.bnd.ecommerce.security;
 
 import com.bnd.ecommerce.entity.employee.Employee;
+import com.bnd.ecommerce.entity.employee.EmployeeRole;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +20,12 @@ public class EmployeeDetails implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(employee.getRole().getName());
-    return List.of(authority);
+    Set<EmployeeRole> employeeRoles = employee.getEmployeeRoles();
+    List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+    for (EmployeeRole role : employeeRoles) {
+      authorities.add(new SimpleGrantedAuthority(role.getRole().getName()));
+    }
+    return authorities;
   }
 
   @Override

@@ -11,11 +11,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-  private final EmployeeDetailsServiceImpl employeeDetailsService;
+  private EmployeeDetailsServiceImpl employeeDetailsService;
 
   @Autowired
   public WebSecurityConfig(EmployeeDetailsServiceImpl employeeDetailsService) {
@@ -24,9 +25,6 @@ public class WebSecurityConfig {
 
   @Bean
   public PasswordEncoder passwordEncoder() {
-    //    Map<String, PasswordEncoder> encoders = new HashMap<>();
-    //    encoders.put("bcrypt", new BCryptPasswordEncoder());
-    //    return new DelegatingPasswordEncoder("bcrypt", encoders);
     return new BCryptPasswordEncoder();
   }
 
@@ -37,36 +35,19 @@ public class WebSecurityConfig {
     authenticationProvider.setPasswordEncoder(passwordEncoder());
     return authenticationProvider;
   }
+
   @DependsOn
-  public void myConfigure( AuthenticationManagerBuilder auth) {
+  public void myConfigure(AuthenticationManagerBuilder auth) {
     auth.authenticationProvider(authenticationProvider());
   }
-
-  //  using in-memory users
-  //  @Bean
-  //  public UserDetailsService userDetailsService(
-  //      PasswordEncoder passwordEncoder, AuthenticationManagerBuilder auth) throws Exception {
-  ////    UserDetails user =
-  ////
-  // User.withUsername("bao").password(passwordEncoder.encode("password")).roles("USER").build();
-  ////    UserDetails admin =
-  ////        User.withUsername("admin")
-  ////            .password(passwordEncoder.encode("adminpwd"))
-  ////            .roles("USER", "ADMIN")
-  ////            .build();
-  //
-  //    auth.userDetailsService(employeeDetailsService).passwordEncoder(passwordEncoder);
-  //
-  //    return new InMemoryUserDetailsManager(user, admin);
-  //  }
 
   @Bean
   public SecurityFilterChain myFilterChain(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-        .antMatchers("/rawUI/")
-        .permitAll()
         .antMatchers("/rawUI/**")
-        .hasRole("ADMIN")
+        .permitAll()
+        //        .antMatchers("/rawUI/**")
+        //        .hasRole("ADMIN")
         .anyRequest()
         .authenticated()
         .and()

@@ -1,6 +1,7 @@
 package com.bnd.ecommerce.controller;
 
 import com.bnd.ecommerce.entity.*;
+import com.bnd.ecommerce.entity.employee.Employee;
 import com.bnd.ecommerce.service.*;
 import java.util.List;
 import javax.validation.Valid;
@@ -22,8 +23,10 @@ public class RawController {
   private final LaptopService laptopService;
   private final TabletService tabletService;
   private final BrandService brandService;
-
   private final CategoryService categoryService;
+  private final EmployeeService employeeService;
+
+  private final RoleService roleService;
 
   public RawController(
       ProductService productService,
@@ -31,13 +34,17 @@ public class RawController {
       LaptopService laptopService,
       TabletService tabletService,
       BrandService brandService,
-      CategoryService categoryService) {
+      CategoryService categoryService,
+      EmployeeService employeeService,
+      RoleService roleService) {
     this.productService = productService;
     this.phoneService = phoneService;
     this.laptopService = laptopService;
     this.tabletService = tabletService;
     this.brandService = brandService;
     this.categoryService = categoryService;
+    this.employeeService = employeeService;
+    this.roleService = roleService;
   }
 
   @GetMapping("/")
@@ -113,9 +120,34 @@ public class RawController {
   }
 
   @GetMapping("/login")
-  public String viewLoginPage(){
+  public String viewLoginPage() {
     return "/rawUI/login";
   }
 
+  @GetMapping("/signup")
+  public String viewRegisterPage(Model model) {
+    model.addAttribute(new Employee());
+    return "/rawUI/signup_form";
+  }
 
+  @PostMapping("/signup")
+  public String signup(@ModelAttribute("employee") Employee employee) {
+    Employee savedEmployee = employeeService.save(employee);
+    if (savedEmployee != null) return "redirect:/rawUI/";
+    else {
+      return "/rawUI/signup_form";
+    }
+  }
+
+  @GetMapping("/newRole")
+  public String showNewRolePage(Model model) {
+    model.addAttribute("role", new Role());
+    return "/rawUI/new_role";
+  }
+
+  @PostMapping("/saveRole")
+  public String saveRole( @Valid @ModelAttribute("role") Role role) {
+    Role savedRole = roleService.save(role);
+    return savedRole != null ? "redirect:/rawUI/" : "/rawUI/new_role";
+  }
 }

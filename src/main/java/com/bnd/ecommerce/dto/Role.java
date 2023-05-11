@@ -1,12 +1,13 @@
-package com.bnd.ecommerce.entity;
+package com.bnd.ecommerce.dto;
 
 import com.bnd.ecommerce.entity.employee.EmployeeRole;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.Set;
 
-@Entity
-@Table(name = "role")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

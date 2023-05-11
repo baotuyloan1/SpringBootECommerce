@@ -6,4 +6,6 @@ public interface EmployeeService {
 
     Employee findByEmail(String email);
 
+    Employee save(Employee employee);
+
 }

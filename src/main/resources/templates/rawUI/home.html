@@ -13,7 +13,7 @@
     <div th:if="${#httpServletRequest.userPrincipal != null }">
         <h1>Hello [[${#httpServletRequest.remoteUser}]]</h1>
         <div sec:authorize="hasRole('ADMIN')">
-            <a href="/rawUI/newCategory">Admin Cpanel</a>
+            <a href="/rawUI/newCategory">Create </a>
         </div>
         <form th:action="@{/rawUI/logout}" method="post">
             <input type="submit" value="Logout">
@@ -24,7 +24,9 @@
         <h3>You have been logged out</h3>
     </div>
 
-
+    <div th:if="${#httpServletRequest.userPrincipal == null}">
+        <a href="/rawUI/signup">Signup</a>
+    </div>
     <h1>Category List</h1>
     <a href="/rawUI/newCategory">Create New Category</a>
     <br/>
@@ -54,7 +56,7 @@
                 <td th:text="${category.id}">Category ID</td>
                 <td th:text="${category.name}">Name</td>
                 <td th:text="${category.description}">Description</td>
-                <td th:text="${category.parentCategory == null ? 'null' : category.parentCategory.id}">Parent</td>
+                <td th:text="${category.parentCategory == null ? 'null' : category.parentCategory.name}">Parent</td>
                 <td>
                     <a th:href="@{'/edit/' + ${category.id}}">Edit</a>
                     <a th:href="@{'/delete/' + ${category.id}}">Delete</a>
