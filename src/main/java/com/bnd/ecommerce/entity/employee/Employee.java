@@ -4,10 +4,13 @@ import com.bnd.ecommerce.entity.CreateTimestamp;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
+import com.bnd.ecommerce.validator.UniqueEmail;
 import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
-@Table(name = "employee")
+@Table(name = "employee", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class Employee extends CreateTimestamp {
 
   @Id
@@ -17,8 +20,20 @@ public class Employee extends CreateTimestamp {
   private String firstName;
   private String lastName;
 
-  @UniqueElements
+  private boolean isEnabled;
+
+  public boolean isEnabled() {
+    return isEnabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    isEnabled = enabled;
+  }
+
+
+  @NotBlank
   @Email
+  @UniqueEmail(message = "Entity: Email exits in system")
   @Column(unique = true)
   private String email;
 
@@ -34,7 +49,7 @@ public class Employee extends CreateTimestamp {
     this.phone = phone;
   }
 
-  @OneToMany(mappedBy = "employee")
+  @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private Set<EmployeeRole> employeeRoles;
 
   public long getId() {
@@ -84,4 +99,6 @@ public class Employee extends CreateTimestamp {
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
+
+
 }

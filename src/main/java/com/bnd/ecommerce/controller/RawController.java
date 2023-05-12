@@ -9,6 +9,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +29,7 @@ public class RawController {
 
   private final RoleService roleService;
 
+
   public RawController(
       ProductService productService,
       PhoneService phoneService,
@@ -36,7 +38,8 @@ public class RawController {
       BrandService brandService,
       CategoryService categoryService,
       EmployeeService employeeService,
-      RoleService roleService) {
+      RoleService roleService
+   ) {
     this.productService = productService;
     this.phoneService = phoneService;
     this.laptopService = laptopService;
@@ -124,18 +127,21 @@ public class RawController {
     return "/rawUI/login";
   }
 
-  @GetMapping("/signup")
+  @GetMapping("/newUser")
   public String viewRegisterPage(Model model) {
     model.addAttribute(new Employee());
-    return "/rawUI/signup_form";
+    model.addAttribute("allRoles", roleService.listAll());
+    return "rawUI/new_user";
   }
 
-  @PostMapping("/signup")
-  public String signup(@ModelAttribute("employee") Employee employee) {
-    Employee savedEmployee = employeeService.save(employee);
+  @PostMapping("/newUser")
+  public String signup(
+      @Valid @ModelAttribute("employee") Employee employee) {
+    Employee savedEmployee = employeeService.save(employee, null);
+
     if (savedEmployee != null) return "redirect:/rawUI/";
     else {
-      return "/rawUI/signup_form";
+      return "rawUI/new_user";
     }
   }
 
@@ -146,7 +152,7 @@ public class RawController {
   }
 
   @PostMapping("/saveRole")
-  public String saveRole( @Valid @ModelAttribute("role") Role role) {
+  public String saveRole(@Valid @ModelAttribute("role") Role role) {
     Role savedRole = roleService.save(role);
     return savedRole != null ? "redirect:/rawUI/" : "/rawUI/new_role";
   }

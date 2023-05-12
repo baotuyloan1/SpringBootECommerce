@@ -1,8 +1,11 @@
 package com.bnd.ecommerce.entity;
 
 import com.bnd.ecommerce.entity.employee.EmployeeRole;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -12,6 +15,8 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotBlank
+    @UniqueElements
     private String name;
 
     private String description;
@@ -52,4 +57,9 @@ public class Role {
     public void setEmployeeRoles(Set<EmployeeRole> employeeRoles) {
         this.employeeRoles = employeeRoles;
     }
+
+
+
+//
+
 }

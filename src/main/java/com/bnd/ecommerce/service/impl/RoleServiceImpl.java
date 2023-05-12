@@ -9,6 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -24,14 +27,13 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
-  public Page<Role> listAll(int pageNum, String sortField, String sortDir, int size) {
-    Pageable pageable =
-        PageRequest.of(
-            pageNum,
-            size,
-            sortDir.equals("asc")
-                ? Sort.by(sortField).ascending()
-                : Sort.by(sortField).descending());
-    return roleRepository.findAll(pageable);
+  public List<Role> listAll() {
+    return roleRepository.findAll();
+  }
+
+  @Override
+  public Role findById(int id) {
+    Optional<Role> role = roleRepository.findById(id);
+    return role.orElse(null);
   }
 }

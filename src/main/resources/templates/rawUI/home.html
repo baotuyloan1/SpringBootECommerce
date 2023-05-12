@@ -12,9 +12,20 @@
 <div align="center">
     <div th:if="${#httpServletRequest.userPrincipal != null }">
         <h1>Hello [[${#httpServletRequest.remoteUser}]]</h1>
-        <div sec:authorize="hasRole('ADMIN')">
-            <a href="/rawUI/newCategory">Create </a>
+
+        <div th:if="${#authentication.getAuthorities() != null}">
+            <p>Roles:</p>
+            <ul>
+                <li th:each="authority : ${#authentication.getAuthorities()}"
+                    th:text="${authority.getAuthority()}"></li>
+            </ul>
         </div>
+        <div sec:authorize="hasRole('bao')">
+            <a href="/rawUI/newCategory">Create 1</a>
+        </div>
+
+
+
         <form th:action="@{/rawUI/logout}" method="post">
             <input type="submit" value="Logout">
         </form>
@@ -25,7 +36,10 @@
     </div>
 
     <div th:if="${#httpServletRequest.userPrincipal == null}">
-        <a href="/rawUI/signup">Signup</a>
+        <a href="/rawUI/newUser">New User</a>
+    </div>
+    <div>
+        <a href="/rawUI/newRole">Add new Role</a>
     </div>
     <h1>Category List</h1>
     <a href="/rawUI/newCategory">Create New Category</a>
