@@ -2,44 +2,135 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+>
 
 <head>
     <meta charset="UTF-8">
     <title>Product Manager</title>
 </head>
+
+<style>
+    table, th, td {
+        border: 1px solid;
+    }
+</style>
 <body>
 <div align="center">
     <div th:if="${#httpServletRequest.userPrincipal != null }">
         <h1>Hello [[${#httpServletRequest.remoteUser}]]</h1>
 
         <div th:if="${#authentication.getAuthorities() != null}">
-            <p>Roles:</p>
-            <ul>
-                <li th:each="authority : ${#authentication.getAuthorities()}"
-                    th:text="${authority.getAuthority()}"></li>
-            </ul>
+            <p>Roles: <span th:each="authority : ${#authentication.getAuthorities()}"
+                            th:text="${authority.getAuthority()} + '    '"/></p>
         </div>
-        <div sec:authorize="hasRole('bao')">
-            <a href="/rawUI/newCategory">Create 1</a>
-        </div>
-
 
 
         <form th:action="@{/rawUI/logout}" method="post">
             <input type="submit" value="Logout">
         </form>
+
+    </div>
+    <div th:if="${#httpServletRequest.userPrincipal == null}">
+        <a href="/rawUI/login">Login</a>
     </div>
 
     <div th:if="${param.logoutStatus}">
         <h3>You have been logged out</h3>
     </div>
 
-    <div th:if="${#httpServletRequest.userPrincipal == null}">
-        <a href="/rawUI/newUser">New User</a>
-    </div>
+
     <div>
+        <h1>List Employees</h1>
+        <a href="/rawUI/newUser">Add new Employee</a>
+        <br/>
+        <br/>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <a>
+                        Employee ID</a>
+                </th>
+                <th>
+                    <a>Email</a>
+                </th>
+                <th>Last Name</th>
+                <th>
+                    <a>First Name</a>
+                </th>
+                <th>Phone</th>
+                <th>Roles</th>
+                <th>Enabled</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <div th:if="${not #lists.isEmpty(listEmployees)}">
+                <tbody>
+                <tr th:each="employee : ${listEmployees}">
+                    <td th:text="${employee.id}">Category ID</td>
+                    <td th:text="${employee.lastName}">Last Name</td>
+                    <td th:text="${employee.firstName}">First Name</td>
+                    <td th:text="${employee.firstName}">Last Name</td>
+                    <td th:text="${employee.phone}">Phone</td>
+                    <td th:text="${employee.employeeRoles}">Roles</td>
+                    <td th:text="${employee.enabled}">Enabled</td>
+                    <td th:if="${currentRoles.contains('ADMIN')}">
+                        <a th:href="@{'/edit/' + ${employee.id}}">Edit</a>
+                        <a th:href="@{'/delete/' + ${employee.id}}">Delete</a>
+                    </td>
+
+                    <td th:if="${not currentRoles.contains('ADMIN')}">
+                        <p>Only ADMIN can action</p>
+                    </td>
+                </tr>
+                </tbody>
+            </div>
+        </table>
+
+    </div>
+
+    <div>
+        <h1>List Roles</h1>
         <a href="/rawUI/newRole">Add new Role</a>
+        <br/>
+        <br/>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <a>
+                        Role ID</a>
+                </th>
+                <th>
+                    <a>Name</a>
+                </th>
+                <th>
+                    <a>Description</a>
+                </th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <div th:if="${not #lists.isEmpty(listRoles)}">
+                <tbody>
+                <tr th:each="role : ${listRoles}">
+                    <td th:text="${role.id}">Category ID</td>
+                    <td th:text="${role.name}">Name</td>
+                    <td th:text="${role.description}">Description</td>
+                    <td th:if="${currentRoles.contains('ADMIN')}">
+                        <a th:href="@{'/edit/' + ${role.id}}">Edit</a>
+                        <a th:href="@{'/delete/' + ${role.id}}">Delete</a>
+                    </td>
+
+                    <td th:if="${not currentRoles.contains('ADMIN')}">
+                        <p>Only ADMIN can action</p>
+                    </td>
+                </tr>
+                </tbody>
+            </div>
+        </table>
+
     </div>
     <h1>Category List</h1>
     <a href="/rawUI/newCategory">Create New Category</a>

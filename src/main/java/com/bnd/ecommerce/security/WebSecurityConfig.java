@@ -1,6 +1,5 @@
 package com.bnd.ecommerce.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -19,7 +18,6 @@ public class WebSecurityConfig {
 
   private final EmployeeDetailsServiceImpl employeeDetailsService;
 
-  @Autowired
   public WebSecurityConfig(EmployeeDetailsServiceImpl employeeDetailsService) {
     this.employeeDetailsService = employeeDetailsService;
   }
@@ -39,7 +37,7 @@ public class WebSecurityConfig {
   }
 
   @DependsOn
-  public void myConfigure(AuthenticationManagerBuilder auth){
+  public void myConfigure(AuthenticationManagerBuilder auth) {
     auth.authenticationProvider(authenticationProvider());
   }
 
@@ -47,8 +45,9 @@ public class WebSecurityConfig {
   public SecurityFilterChain myFilterChain(HttpSecurity http) throws Exception {
     http.authorizeRequests()
         .antMatchers("/rawUI/newUser")
-           // .hasAnyRole("ADMIN")  // only allow users with the "ROLE_ADMIN" authority
-        .hasAnyAuthority("ADMIN","MANAGER") // only allow users with the "ADMIN" or "MANAGER" authority
+        // .hasAnyRole("ADMIN")  // only allow users with the "ROLE_ADMIN" authority
+        .hasAnyAuthority(
+            "ADMIN", "MANAGER") // only allow users with the "ADMIN" or "MANAGER" authority
         .antMatchers("/rawUI/**")
         .permitAll()
         .anyRequest()
@@ -60,6 +59,7 @@ public class WebSecurityConfig {
         .passwordParameter("password")
         .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
         .permitAll()
+        .defaultSuccessUrl("/rawUI/")
         //        .failureUrl("/rawUI/login?message=wrongpassword")
         .and()
         .logout()
