@@ -19,7 +19,7 @@ public class EmployeeDetailsServiceImpl implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Employee employee = employeeService.findByEmail(username);
-    if (username == null) {
+    if (employee == null) {
       throw new UsernameNotFoundException("Could not find user");
     }
     return new EmployeeDetails(employee);

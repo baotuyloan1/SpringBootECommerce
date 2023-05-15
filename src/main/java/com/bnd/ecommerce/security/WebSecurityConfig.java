@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -44,12 +43,14 @@ public class WebSecurityConfig {
   @Bean
   public SecurityFilterChain myFilterChain(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-        .antMatchers("/rawUI/newUser")
-        // .hasAnyRole("ADMIN")  // only allow users with the "ROLE_ADMIN" authority
-        .hasAnyAuthority(
-            "ADMIN", "MANAGER") // only allow users with the "ADMIN" or "MANAGER" authority
-        .antMatchers("/rawUI/**")
+        .antMatchers("/rawUI/admin/**")
+        //         .hasAnyRole("ADMIN")  // only allow users with the "ROLE_ADMIN" authority
+        .hasAnyAuthority("ADMIN") // only allow users with the "ADMIN" or "MANAGER"
+        // authority
+        .antMatchers("/rawUI/")
         .permitAll()
+        .antMatchers("/rawUI/**")
+        .hasAnyAuthority("ADMIN", "MANAGER")
         .anyRequest()
         .authenticated()
         .and()
@@ -57,15 +58,18 @@ public class WebSecurityConfig {
         .loginPage("/rawUI/login")
         .usernameParameter("email")
         .passwordParameter("password")
-        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
+        //        .defaultSuccessUrl("/rawUI/")
+        .successHandler(new CustomAuthenticationSuccessHandler())
+        .failureUrl("/rawUI/login?message=error")
         .permitAll()
-        .defaultSuccessUrl("/rawUI/")
-        //        .failureUrl("/rawUI/login?message=wrongpassword")
         .and()
         .logout()
         .logoutUrl("/rawUI/logout")
         .logoutSuccessUrl("/rawUI/?logoutStatus=true")
-        .permitAll();
+        .permitAll()
+        .and()
+        .exceptionHandling()
+        .accessDeniedHandler(new MyAccessDeniedHandler() {});
     //        .and()
     //        .httpBasic();
     return http.build();

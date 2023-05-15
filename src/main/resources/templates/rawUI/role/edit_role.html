@@ -9,7 +9,7 @@
 <div th:align="center">
     <h1>Create New Product</h1>
     <br/>
-    <form th:action="@{/rawUI/admin/editRole}" th:object="${role}" method="post">
+    <form th:action="@{'/rawUI/admin/editRole/'+${role.id}} " th:object="${role}" method="post">
         <table th:border="0" th:cellpadding="10">
             <tr>
                 <td><label>Name:

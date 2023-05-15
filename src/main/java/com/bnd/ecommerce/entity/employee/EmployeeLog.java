@@ -20,9 +20,6 @@ public class EmployeeLog extends CreateTimestamp {
     private LogTypeEmployee logTypeEmployee;
 
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
 
     public long getId() {
         return id;
@@ -48,11 +45,5 @@ public class EmployeeLog extends CreateTimestamp {
         this.logTypeEmployee = logTypeEmployee;
     }
 
-    public Employee getEmployee() {
-        return employee;
-    }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
 }

@@ -1,65 +1,61 @@
 package com.bnd.ecommerce.entity;
 
-import com.bnd.ecommerce.entity.employee.EmployeeRole;
-import org.hibernate.validator.constraints.UniqueElements;
-
+import com.bnd.ecommerce.entity.employee.Employee;
+import com.bnd.ecommerce.validator.role.UniqueRoleName;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "role")
 public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;
 
-    @NotBlank
-    @UniqueElements
-    private String name;
+  @NotBlank
+  @UniqueRoleName(message = "Message: name của role không được trùng")
+  private String name;
 
-    private String description;
+  private String description;
 
+  @ManyToMany(mappedBy = "roles")
+  private Set<Employee> employees;
 
-    @OneToMany(mappedBy = "role")
-    private Set<EmployeeRole> employeeRoles;
+  public int getId() {
+    return id;
+  }
 
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setDescription(String keyword) {
+    this.description = keyword;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public Set<Employee> getEmployees() {
+    return employees;
+  }
 
-    public void setDescription(String keyword) {
-        this.description = keyword;
-    }
+  public void setEmployees(Set<Employee> employees) {
+    this.employees = employees;
+  }
 
-    public Set<EmployeeRole> getEmployeeRoles() {
-        return employeeRoles;
-    }
-
-    public void setEmployeeRoles(Set<EmployeeRole> employeeRoles) {
-        this.employeeRoles = employeeRoles;
-    }
-
-
-
-//
-
+  @Override
+  public String toString() {
+    return name;
+  }
 }

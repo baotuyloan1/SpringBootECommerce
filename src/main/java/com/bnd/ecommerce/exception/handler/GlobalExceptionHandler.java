@@ -1,6 +1,6 @@
 package com.bnd.ecommerce.exception.handler;
 
-import com.bnd.ecommerce.exception.CategoryNotFoundException;
+import com.bnd.ecommerce.exception.NotFoundException;
 import com.bnd.ecommerce.exception.ErrorDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(CategoryNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorDTO handleCategoryNotFound(HttpServletRequest request, Exception exception) {
@@ -31,8 +31,6 @@ public class GlobalExceptionHandler {
                 + request.getServerPort() //lấy port(int) nếu có
                 + request.getContextPath() // lấy tên của web application
                 + request.getServletPath() // Lấy servlet path (nếu có)
-                + request.getPathInfo()
-                + request.getQueryString()
         );
         LOGGER.error(exception.getMessage(), exception);
         return errorDTO;

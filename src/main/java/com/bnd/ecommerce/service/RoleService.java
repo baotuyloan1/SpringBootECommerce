@@ -10,4 +10,10 @@ public interface RoleService {
     List<Role> listRoles();
 
     Role findById(int id);
+
+    Role findByRoleName(String roleName);
+
+    boolean deleteById(int id);
+
+
 }

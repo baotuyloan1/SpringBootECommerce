@@ -41,7 +41,7 @@
 
     <div>
         <h1>List Employees</h1>
-        <a href="/rawUI/newUser">Add new Employee</a>
+        <a href="/rawUI/admin/newEmployee">Add new Employee</a>
         <br/>
         <br/>
         <table>
@@ -69,15 +69,15 @@
                 <tbody>
                 <tr th:each="employee : ${listEmployees}">
                     <td th:text="${employee.id}">Category ID</td>
-                    <td th:text="${employee.lastName}">Last Name</td>
+                    <td th:text="${employee.email}">Email</td>
                     <td th:text="${employee.firstName}">First Name</td>
-                    <td th:text="${employee.firstName}">Last Name</td>
+                    <td th:text="${employee.lastName}">Last Name</td>
                     <td th:text="${employee.phone}">Phone</td>
-                    <td th:text="${employee.employeeRoles}">Roles</td>
+                    <td th:text="${employee.roles}">Roles</td>
                     <td th:text="${employee.enabled}">Enabled</td>
                     <td th:if="${currentRoles.contains('ADMIN')}">
-                        <a th:href="@{'/edit/' + ${employee.id}}">Edit</a>
-                        <a th:href="@{'/delete/' + ${employee.id}}">Delete</a>
+                        <a th:href="@{'/rawUI/admin/editEmployee/' + ${employee.id}}">Edit</a>
+                        <a th:href="@{'/rawUI/admin/deleteEmployee/' + ${employee.id}}">Delete</a>
                     </td>
 
                     <td th:if="${not currentRoles.contains('ADMIN')}">
@@ -92,7 +92,7 @@
 
     <div>
         <h1>List Roles</h1>
-        <a href="/rawUI/newRole">Add new Role</a>
+        <a href="/rawUI/admin/newRole">Add new Role</a>
         <br/>
         <br/>
         <table>
@@ -119,10 +119,9 @@
                     <td th:text="${role.name}">Name</td>
                     <td th:text="${role.description}">Description</td>
                     <td th:if="${currentRoles.contains('ADMIN')}">
-                        <a th:href="@{'/edit/' + ${role.id}}">Edit</a>
-                        <a th:href="@{'/delete/' + ${role.id}}">Delete</a>
+                        <a th:href="@{'/rawUI/admin/editRole/' + ${role.id}}">Edit</a>
+                        <a th:href="@{'/rawUI/admin/deleteRole/' + ${role.id}}">Delete</a>
                     </td>
-
                     <td th:if="${not currentRoles.contains('ADMIN')}">
                         <p>Only ADMIN can action</p>
                     </td>

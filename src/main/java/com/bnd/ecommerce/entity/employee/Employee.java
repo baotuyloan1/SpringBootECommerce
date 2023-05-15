@@ -1,17 +1,17 @@
 package com.bnd.ecommerce.entity.employee;
 
-import com.bnd.ecommerce.entity.CreateTimestamp;
+import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
+import com.bnd.ecommerce.entity.Role;
+import com.bnd.ecommerce.validator.email.UniqueEmail;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import com.bnd.ecommerce.validator.UniqueEmail;
-import org.hibernate.validator.constraints.UniqueElements;
-
 @Entity
 @Table(name = "employee", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
-public class Employee extends CreateTimestamp {
+public class Employee extends CreateUpdateTimeStamp {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +30,8 @@ public class Employee extends CreateTimestamp {
     isEnabled = enabled;
   }
 
-
   @NotBlank
   @Email
-  @UniqueEmail(message = "Entity: Email exits in system")
   @Column(unique = true)
   private String email;
 
@@ -49,8 +47,12 @@ public class Employee extends CreateTimestamp {
     this.phone = phone;
   }
 
-  @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private Set<EmployeeRole> employeeRoles;
+  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinTable(
+      name = "employee_role",
+      joinColumns = @JoinColumn(name = "employee_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roles;
 
   public long getId() {
     return id;
@@ -76,14 +78,6 @@ public class Employee extends CreateTimestamp {
     this.password = password;
   }
 
-  public Set<EmployeeRole> getEmployeeRoles() {
-    return employeeRoles;
-  }
-
-  public void setEmployeeRoles(Set<EmployeeRole> employeeRoles) {
-    this.employeeRoles = employeeRoles;
-  }
-
   public String getFirstName() {
     return firstName;
   }
@@ -100,5 +94,32 @@ public class Employee extends CreateTimestamp {
     this.lastName = lastName;
   }
 
+  public Set<Role> getRoles() {
+    return roles;
+  }
 
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
+  }
+
+  public void addRole(Role role) {
+    if (roles == null) {
+      roles = new HashSet<>();
+    }
+    roles.add(role);
+  }
+
+  @Override
+  public String toString() {
+    return "Employee{" +
+            "id=" + id +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", isEnabled=" + isEnabled +
+            ", email='" + email + '\'' +
+            ", password='" + password + '\'' +
+            ", phone='" + phone + '\'' +
+            ", roles=" + roles +
+            '}';
+  }
 }

@@ -1,7 +1,8 @@
 package com.bnd.ecommerce.security;
 
+import com.bnd.ecommerce.entity.Role;
 import com.bnd.ecommerce.entity.employee.Employee;
-import com.bnd.ecommerce.entity.employee.EmployeeRole;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,10 +21,10 @@ public class EmployeeDetails implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    Set<EmployeeRole> employeeRoles = employee.getEmployeeRoles();
+    Set<Role> roles = employee.getRoles();
     List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-    for (EmployeeRole role : employeeRoles) {
-      authorities.add(new SimpleGrantedAuthority(role.getRole().getName()));
+    for (Role role : roles) {
+      authorities.add(new SimpleGrantedAuthority(role.getName()));
     }
     return authorities;
   }
