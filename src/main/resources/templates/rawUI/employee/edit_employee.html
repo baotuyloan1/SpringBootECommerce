@@ -15,17 +15,17 @@
             <div class="form-group row">
                 <label class="col-4 col-form-label">E-mail: </label>
                 <div class="col-8">
-                    <input type="email" th:field="*{email}" class="form-control"  disabled />
+                    <input type="email" th:field="*{email}" class="form-control" disabled/>
                 </div>
             </div>
 
-<!--            <div class="form-group row">-->
-<!--                <label class="col-4 col-form-label">Password: </label>-->
-<!--                <div class="col-8">-->
-<!--                    <input type="password" th:field="*{password}" class="form-control"-->
-<!--                           required minlength="3" maxlength="10"/>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--            <div class="form-group row">-->
+            <!--                <label class="col-4 col-form-label">Password: </label>-->
+            <!--                <div class="col-8">-->
+            <!--                    <input type="password" th:field="*{password}" class="form-control"-->
+            <!--                           required minlength="3" maxlength="10"/>-->
+            <!--                </div>-->
+            <!--            </div>-->
 
             <div class="form-group row">
                 <label class="col-4 col-form-label">First Name: </label>
@@ -43,6 +43,20 @@
                 </div>
             </div>
 
+
+            <div class="form-group row">
+                <label for="change-password-checkbox">Change password: </label>
+                <input type="checkbox" id="change-password-checkbox"/>
+            </div>
+
+            <div id="password-fields" hidden>
+                <div>
+                    <label for="password-input">New Password: </label>
+                    <div>
+                        <input type="password" id="password-input" th:field="*{password}">
+                    </div>
+                </div>
+            </div>
             <div class="form-group row">
                 <label class="col-4 col-form-label">Phone: </label>
                 <div class="col-8">
@@ -57,7 +71,7 @@
                 <!--                           th:text="${role}">-->
                 <!--                </label>-->
                 <th:block th:each="role : ${allRoles}">
-                    <input type="checkbox"  th:field="*{roles}" th:value="${role.id}"/>
+                    <input type="checkbox" th:field="*{roles}" th:value="${role.id}"/>
                     <label th:text="${role.name}"></label>
                 </th:block>
 
@@ -73,5 +87,23 @@
         </div>
     </form>
 </div>
+
+<script>
+    const changePasswordCheckbox = document.getElementById('change-password-checkbox');
+    const passwordInput = document.getElementById('password-input');
+    const passwordFields = document.getElementById('password-fields');
+
+    changePasswordCheckbox.addEventListener('change', () => {
+        if (changePasswordCheckbox.checked) {
+            passwordInput.disabled = false;
+            passwordFields.removeAttribute('hidden');
+        } else {
+            // N?u checkbox không ???c check, disable input password
+            passwordInput.disabled = true;
+            passwordFields.setAttribute('hidden', '');
+        }
+    })
+
+</script>
 </body>
 </html>

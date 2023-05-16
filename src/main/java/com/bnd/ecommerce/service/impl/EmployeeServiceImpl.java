@@ -50,8 +50,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     return employeeRepository.findByEmail(email);
   }
 
-  @Override
   @Transactional
+  @Override
   public Employee save(
       Employee employee,
       Authentication authentication,
@@ -74,7 +74,8 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public Page<Employee> listAll(int size, int numPage, String sortField, String sortDir) {
+  public Page<Employee> listAll(
+      int size, int numPage, String sortField, String sortDir, String keyword) {
     Pageable pageable =
         PageRequest.of(
             numPage - 1,
@@ -82,6 +83,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             sortDir.equals("asc")
                 ? Sort.by(sortField).ascending()
                 : Sort.by(sortField).descending());
+    if (keyword != null && !keyword.equals("".trim())) {
+      return employeeRepository.search(keyword, pageable);
+    }
     return employeeRepository.findAll(pageable);
   }
 
@@ -100,16 +104,30 @@ public class EmployeeServiceImpl implements EmployeeService {
   public Employee updateNoPassword(
       long id, EmployeeUpdateDto employeeUpdateDto, Authentication authentication) {
     Employee savedEmployee = mapStructMapper.employeeUpdateDtoToEmployee(employeeUpdateDto);
-    savedEmployee.setId(id);
-    savedEmployee.setEmail(employeeRepository.findEmailById(id));
-    EmployeeLog employeeLog = new EmployeeLog();
-    employeeLog.setLogTypeEmployee(LogTypeEmployee.UPDATED);
-    StringBuilder stringBuilder = new StringBuilder(savedEmployee.toString() + " was updated by ");
-    stringBuilder.append(authentication.getName() + " ");
-    stringBuilder.append(authentication.getAuthorities().toString());
-    employeeLog.setMessageLog(stringBuilder.toString());
-    employeeServiceLog.save(employeeLog);
-    return employeeRepository.save(savedEmployee);
+    Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+    if (optionalEmployee.isPresent()) {
+      Employee oldEmployee = optionalEmployee.get();
+      savedEmployee.setId(oldEmployee.getId());
+      savedEmployee.setEmail(oldEmployee.getEmail());
+      if (savedEmployee.getPassword() != null && !savedEmployee.getPassword().trim().equals("")) {
+        savedEmployee.setPassword(new BCryptPasswordEncoder().encode(savedEmployee.getPassword()));
+      } else {
+        savedEmployee.setPassword(oldEmployee.getPassword());
+      }
+      EmployeeLog employeeLog = new EmployeeLog();
+      employeeLog.setLogTypeEmployee(LogTypeEmployee.UPDATED);
+      String stringBuilder =
+          savedEmployee.toString()
+              + " was updated by "
+              + authentication.getName()
+              + " "
+              + authentication.getAuthorities().toString();
+      employeeLog.setMessageLog(stringBuilder);
+      employeeServiceLog.save(employeeLog);
+      return employeeRepository.save(savedEmployee);
+    } else {
+      throw new NotFoundException("Updated Employee wasn't found !!!");
+    }
   }
 
   @Override
@@ -123,14 +141,14 @@ public class EmployeeServiceImpl implements EmployeeService {
   public boolean deleteById(long id, Authentication authentication) {
 
     Employee deletedEmployee = findById(id);
-    employeeRepository.deleteEmployeeRoleByEmployeeId(id);
-
     EmployeeLog employeeLog = new EmployeeLog();
     employeeLog.setLogTypeEmployee(LogTypeEmployee.DELETED);
     StringBuilder stringBuilder = new StringBuilder(deletedEmployee.toString() + " was delete by ");
     stringBuilder.append(authentication.getName() + " ");
     stringBuilder.append(authentication.getAuthorities().toString());
     employeeLog.setMessageLog(stringBuilder.toString());
+
+    employeeRepository.deleteEmployeeRoleByEmployeeId(id);
     employeeServiceLog.save(employeeLog);
     deletedEmployee.getRoles().clear();
 

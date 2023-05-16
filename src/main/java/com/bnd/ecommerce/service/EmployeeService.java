@@ -17,7 +17,7 @@ public interface EmployeeService {
       String action,
       LogTypeEmployee logTypeEmployee);
 
-  Page<Employee> listAll(int size, int numPage, String sortField, String sortDir);
+  Page<Employee> listAll(int size, int numPage, String sortField, String sortDir, String keyword);
 
   Employee findById(Long id);
 

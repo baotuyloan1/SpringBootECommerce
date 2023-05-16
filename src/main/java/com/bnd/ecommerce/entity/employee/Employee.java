@@ -117,7 +117,6 @@ public class Employee extends CreateUpdateTimeStamp {
             ", lastName='" + lastName + '\'' +
             ", isEnabled=" + isEnabled +
             ", email='" + email + '\'' +
-            ", password='" + password + '\'' +
             ", phone='" + phone + '\'' +
             ", roles=" + roles +
             '}';

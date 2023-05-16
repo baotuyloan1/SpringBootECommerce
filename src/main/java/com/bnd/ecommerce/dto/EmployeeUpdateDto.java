@@ -2,11 +2,9 @@ package com.bnd.ecommerce.dto;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.entity.Role;
-import com.bnd.ecommerce.validator.email.UniqueEmail;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
 import java.util.Set;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
