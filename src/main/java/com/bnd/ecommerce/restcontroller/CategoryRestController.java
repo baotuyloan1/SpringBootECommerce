@@ -23,7 +23,7 @@ public class CategoryRestController {
     }
 
     @GetMapping("/categories/{id}")
-    public Category getOne(@Positive(message = "Category ID must be greater than zero") @PathVariable("id") Long id) {
+    public Category getOne(@Positive(message = "Category ID must be greater than zero") @PathVariable("id") int id) {
         return categoryService.findById(id);
     }
 
@@ -41,7 +41,7 @@ public class CategoryRestController {
 
     @DeleteMapping("/categories/{id}")
     public void delete(@PathVariable("id") @Positive(message = "Deleted Category ID must be greater than zero") Integer id) {
-        categoryService.deleteCategory(id);
+        categoryService.deleteById(id);
     }
 
 

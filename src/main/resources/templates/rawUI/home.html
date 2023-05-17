@@ -136,7 +136,11 @@
 
     </div>
     <h1>Category List</h1>
-    <a href="/rawUI/newCategory">Create New Category</a>
+    <div>
+        <a href="/rawUI/categories/create">Create New Category</a>
+        &nbsp;
+        <a href="/rawUI/categories/">View More</a>
+    </div>
     <br/>
     <table>
         <thead>
@@ -166,38 +170,63 @@
                 <td th:text="${category.description}">Description</td>
                 <td th:text="${category.parentCategory == null ? 'null' : category.parentCategory.name}">Parent</td>
                 <td>
-                    <a th:href="@{'/edit/' + ${category.id}}">Edit</a>
-                    <a th:href="@{'/delete/' + ${category.id}}">Delete</a>
+                    <a th:href="@{'/rawUI/categories/editCategory/' + ${category.id}}">Edit</a>
+                    <a th:href="@{'/rawUI/categories/deleteCategory/' + ${category.id}}">Delete</a>
                 </td>
             </tr>
             </tbody>
         </div>
     </table>
     <br/>
-    <div>Total Categories: [[${totalCategories}]]</div>
-    <a th:if="${currentPageCategories > 1}"
-       th:href="@{'/rawUI/page/1?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">First</a>
-    <span th:unless="${currentPageCategories > 1}">First</span>
-    <a th:if="${currentPageCategories > 1}"
-       th:href="@{'/rawUI/page/'+${currentPageCategories -1}+'?sortField='+${sortField}+'&sortDir='+${sortDir  }+${keyword == null ? '' : ('&keyword='+keyword)}}">Previous</a>
-    <span th:unless="${currentPageCategories > 1}">Previous</span>
-
-    <span th:each="i : ${#numbers.sequence(1,currentPageCategories)}">
-                <a th:if="${currentPageCategories != i}"
-                   th:href="@{'/rawUI/page/' +${i} +'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">[[${i}]]</a>
-                <span th:unless="${currentPageCategories != i}">[[${i}]]</span>
-                 &nbsp;
-            </span>
-    <a th:if="${currentPageCategories < totalPagesCategories}"
-       th:href="@{'/rawUI/page/'+${currentPageCategories+1}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">Next</a>
-    <span th:unless="${currentPageCategories < totalPagesCategories}">Next</span>
-
-    <a th:if="${currentPageCategories < totalPagesCategories}"
-       th:href="@{'/rawUI/page/'+${totalPagesCategories}+'?sortField='+${sortField}+'&sortDir='+${sortDir}+${keyword == null ? '' : ('&keyword='+keyword)}}">Last</a>
-    <span th:if="${currentPageCategories >= totalPagesCategories}">Last</span>
-
     <br/>
-    <a href="/rawUI/newBrand"></a>
+    <h1>Brands List</h1>
+    <div>
+        <a href="/rawUI/brands/createBrand">Create New Brand</a>
+        &nbsp;
+        <a href="/rawUI/brands/1">View More</a>
+    </div>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                <a>
+                    Brand ID</a>
+            </th>
+            <th>
+                <a>Name</a>
+            </th>
+            <th>
+                <a>Description</a>
+            </th>
+            <th>
+                <a>Create Time
+                </a></th>
+            <th>
+                <a>Update Time
+                </a></th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <div th:if="${not #lists.isEmpty(listBrands)}">
+            <tbody>
+            <tr th:each="brand : ${listBrands}">
+                <td th:text="${brand.id}">Brand ID</td>
+                <td th:text="${brand.name}">Name</td>
+                <td th:text="${brand.description}">Description</td>
+                <td th:text="${brand.createTime == null ? 'null' : brand.createTime}">Create Time</td>
+                <td th:text="${brand.updateTime == null ? 'null' : brand.updateTime}">Update Time</td>
+                <td>
+                    <a th:href="@{'/rawUI/categories/editCategory/' + ${brand.id}}">Edit</a>
+                    <a th:href="@{'/rawUI/categories/deleteCategory/' + ${brand.id}}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+    </table>
+    <br/>
+    <br/>
     <h1>Product List</h1>
     <a href="/rawUI/newPhone">Create New Phone</a>
     <a href="/rawUI/newTablet">Create New Tablet</a>
@@ -289,7 +318,6 @@
     </table>
     <br/>
     <br/>
-    <div><i>Sorted by [[${sortField}]] in [[${sortDir}]]</i></div>
     <br/>
     <br/>
 

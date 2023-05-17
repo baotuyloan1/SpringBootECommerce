@@ -27,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public Category findById(Long id) {
+  public Category findById(int id) {
     Optional<Category> category = categoryRepository.findById(id);
     if (category.isPresent()) {
       return category.get();
@@ -42,8 +42,10 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public void deleteCategory(long id) {
+  public boolean deleteById(int id) {
     categoryRepository.deleteById(id);
+    boolean isDeleted = categoryRepository.existsById(id);
+    return !isDeleted;
   }
 
   public Page<Category> listAll(int pageNum, String sortField, String sortDir, int size) {

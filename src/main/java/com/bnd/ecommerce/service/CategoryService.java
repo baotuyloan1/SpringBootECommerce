@@ -1,19 +1,18 @@
 package com.bnd.ecommerce.service;
 
 import com.bnd.ecommerce.entity.Category;
-import org.springframework.data.domain.Page;
-
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface CategoryService {
 
-    Category saveCategory(Category category);
+  Category saveCategory(Category category);
 
-    Category findById(Long id);
+  Category findById(int id);
 
-    List<Category> listCategories();
+  List<Category> listCategories();
 
-    void deleteCategory(long id);
+  boolean deleteById(int id);
 
-    Page<Category> listAll(int pageNum, String sortField, String sortDir, int size);
+  Page<Category> listAll(int pageNum, String sortField, String sortDir, int size);
 }

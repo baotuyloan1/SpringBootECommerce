@@ -7,9 +7,9 @@
 </head>
 <body>
 <div th:align="center">
-  <h1>Create New Product</h1>
+  <h1>Create New Category</h1>
   <br/>
-  <form th:action="@{/rawUI/saveCategory}" th:object="${category}" method="post">
+  <form th:action="@{'/rawUI/categories/saveCategory'}" th:object="${category}" method="post">
     <table th:border="0" th:cellpadding="10">
       <tr>
         <td><label>Category name:

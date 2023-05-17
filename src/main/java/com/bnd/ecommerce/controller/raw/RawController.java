@@ -59,26 +59,6 @@ public class RawController {
     return "rawUI/new_phone";
   }
 
-  @GetMapping("/newCategory")
-  public String showCreateCategory(Model model) {
-    Category category = new Category();
-    List<Category> categories = categoryService.listCategories();
-    model.addAttribute("category", category);
-    model.addAttribute("categories", categories);
-    return "rawUI/new_category";
-  }
-
-  @PostMapping("/saveCategory")
-  public String saveCategory(@Valid @ModelAttribute("category") Category category) {
-    categoryService.saveCategory(category);
-    return REDIRECT_HOME;
-  }
-
-  @DeleteMapping("/deleteCategory/{id}")
-  public String deleteCategory() {
-    return null;
-  }
-
   @GetMapping("/page/{pageNum}")
   public String viewPage(
       @PathVariable("pageNum") @Positive(message = "Page number must be greater than 0")
@@ -95,10 +75,12 @@ public class RawController {
     Page<Category> pageCategories = categoryService.listAll(pageNum, sortField, sortDir, size);
     Page<Product> pageProduct = productService.listAll(pageNum, sortField, sortDir, size);
     Page<Laptop> pageLaptop = laptopService.listAll(pageNum, sortField, sortDir, size);
+    Page<Brand> pageBrand = brandService.pageBrands(pageNum, sortDir, sortField, size);
     List<Category> listCategories = pageCategories.getContent();
     List<Product> listProducts = pageProduct.getContent();
     List<Laptop> listLaptops = pageLaptop.getContent();
     List<Role> roles = roleService.listRoles();
+    List<Brand> listBrands = pageBrand.getContent();
     Page<Employee> employeePage = employeeService.listAll(size, pageNum, sortField, sortDir, null);
     model.addAttribute("listEmployees", employeePage.getContent());
     model.addAttribute("listRoles", roles);
@@ -108,6 +90,7 @@ public class RawController {
     model.addAttribute("sortField", sortField);
     model.addAttribute("sortDir", sortDir);
     model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+    model.addAttribute("listBrands", listBrands);
     model.addAttribute("currentPageCategories", pageNum);
     model.addAttribute("totalPagesCategories", pageCategories.getTotalPages());
 

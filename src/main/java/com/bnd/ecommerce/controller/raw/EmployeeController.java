@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 public class EmployeeController {
   private final EmployeeService employeeService;
   private final RoleService roleService;
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
   private static final String REDIRECT_EMPLOYEES = "redirect:/rawUI/admin/employees/1";
   private static final String ALL_ROLES_STRING = "allRoles";
@@ -43,6 +47,13 @@ public class EmployeeController {
       @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
       Model model,
       Authentication authentication) {
+
+    LOGGER.trace("for tracing purpose");
+    LOGGER.debug("for debugging purpose");
+    LOGGER.info("for informational purpose");
+    LOGGER.warn("for warning purpose");
+    LOGGER.error("for logging errors");
+
     Page<Employee> employeePage =
         employeeService.listAll(size, pageNum, sortField, sortDir, keyword);
 
@@ -58,8 +69,8 @@ public class EmployeeController {
     model.addAttribute("totalItems", employeePage.getTotalElements());
     model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
     model.addAttribute("numberElement", size);
-    model.addAttribute("sortField",sortField);
-    model.addAttribute("sortDir",sortDir);
+    model.addAttribute("sortField", sortField);
+    model.addAttribute("sortDir", sortDir);
     return "rawUI/employee/employees";
   }
 
@@ -101,7 +112,7 @@ public class EmployeeController {
       Authentication authentication) {
     Employee employee = employeeService.updateNoPassword(id, employeeUpdateDto, authentication);
     if (employee != null) {
-      return "redirect:/rawUI/";
+      return REDIRECT_EMPLOYEES;
     }
     throw new RuntimeException("Failed update");
   }
@@ -110,7 +121,7 @@ public class EmployeeController {
   public String deleteEmployee(@PathVariable("id") long id, Authentication authentication) {
     boolean status = employeeService.deleteById(id, authentication);
     if (status) {
-      return "redirect:/rawUI/";
+      return REDIRECT_EMPLOYEES;
     } else {
       throw new RuntimeException("Delete Unsuccessfully");
     }
