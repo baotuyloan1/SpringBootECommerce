@@ -1,11 +1,12 @@
 package com.bnd.ecommerce.service.impl;
 
+import com.bnd.ecommerce.dto.CategoryDto;
 import com.bnd.ecommerce.entity.Category;
 import com.bnd.ecommerce.exception.NotFoundException;
+import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.repository.CategoryRepository;
 import com.bnd.ecommerce.service.CategoryService;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +18,12 @@ public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository categoryRepository;
 
-  public CategoryServiceImpl(CategoryRepository categoryRepository) {
+  private final MapStructMapper mapStructMapper;
+
+  public CategoryServiceImpl(
+      CategoryRepository categoryRepository, MapStructMapper mapStructMapper) {
     this.categoryRepository = categoryRepository;
+    this.mapStructMapper = mapStructMapper;
   }
 
   @Override
@@ -57,5 +62,34 @@ public class CategoryServiceImpl implements CategoryService {
                 ? Sort.by(sortField).ascending()
                 : Sort.by(sortField).descending());
     return categoryRepository.findAll(pageable);
+  }
+
+  @Override
+  public Set<CategoryDto> categoryDtoSet() {
+    List<Category> categoryList = categoryRepository.findAll();
+    Set<CategoryDto> categoryDtoSet = new HashSet<>();
+    for (Category category : categoryList) {
+      categoryDtoSet.add(mapStructMapper.categoryToCategoryDto(category));
+    }
+    return categoryDtoSet;
+  }
+
+  @Override
+  public CategoryDto findCategoryDtoById(int id) {
+    Optional<Category> category = categoryRepository.findById(id);
+    if (category.isPresent()) {
+      return mapStructMapper.categoryToCategoryDto(category.get());
+    }
+    throw new NotFoundException("Category not found");
+  }
+
+  @Override
+  public Category getParentCategoryByCategoryId(int id) {
+    return categoryRepository.getParentCategoryByCategoryId(id);
+  }
+
+  @Override
+  public List<Category> getRootCategoryList() {
+    return categoryRepository.rootCategoryList();
   }
 }

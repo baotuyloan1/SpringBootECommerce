@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface PhoneRepository extends JpaRepository<Phone, Long> {
     @Query("SELECT ph FROM Phone ph INNER JOIN Product pr ON ph.product.id = pr.id INNER JOIN Brand br ON pr.brand.id = br.id INNER JOIN Category ca WHERE CONCAT(ph.ram,' ',ph.chip,' ', pr.name, ' ', pr.description,' ' , br.name, ' ',ca.name) LIKE %?1%")
     public void searchPhone(String keyword);
+
+
 }

@@ -1,5 +1,6 @@
 package com.bnd.ecommerce.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -38,12 +39,30 @@ public class Product extends CreateUpdateTimeStamp {
   @OneToMany(mappedBy = "product")
   private Set<ProductLog> productLog;
 
-  @ManyToMany
+  @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  public Phone phone;
+
+//  @OneToOne(fetch = FetchType.EAGER)
+//  public Laptop laptop;
+//
+//  @OneToOne
+//  public Tablet tablet;
+
+
+  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(
       name = "product_category",
       joinColumns = @JoinColumn(name = "product_id"),
       inverseJoinColumns = @JoinColumn(name = "category_id"))
   private Set<Category> categories;
+
+  public Phone getPhone() {
+    return phone;
+  }
+
+  public void setPhone(Phone phone) {
+    this.phone = phone;
+  }
 
   @OneToMany(mappedBy = "product")
   private Set<ProductDetailImage> productDetailImages;
@@ -103,4 +122,10 @@ public class Product extends CreateUpdateTimeStamp {
   public void setProductDetailImages(Set<ProductDetailImage> productDetailImages) {
     this.productDetailImages = productDetailImages;
   }
+
+  public void addCategory(Category category) {
+    if (categories == null) categories = new HashSet<>();
+    this.categories.add(category);
+  }
+
 }

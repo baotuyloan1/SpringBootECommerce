@@ -16,4 +16,7 @@ public interface BrandService {
   Brand findById(int id);
 
   boolean deleteById(int id);
+
+  List<BrandDto> brandDtoList();
+  BrandDto findBrandDtoById(int id);
 }

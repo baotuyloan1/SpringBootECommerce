@@ -9,77 +9,86 @@
 <div align="center">
     <h1>Create New Product</h1>
     <br/>
-    <form th:action="@{'/rawUI/products/newPhone'}" th:object="${phone}" method="post">
+    <form th:action="@{'/rawUI/products/createPhone'}" th:object="${phoneDto}" method="post">
         <table border="0" cellpadding="10">
             <tr>
                 <td>Product Name:</td>
-                <td><input type="text" th:field="*{product.name}"/></td>
+                <td><input type="text" th:field="*{productDto.name}"/></td>
             </tr>
             <tr>
                 <td>Brand:</td>
                 <td>
-                    <select th:field="*{product.brand}">
-                        <option th:each="i : ${brands}" th:value="${i.name}" th:text="${i.name}"></option>
+                    <select th:field="*{productDto.brandDto}">
+                        <option th:each="i : ${brandDtoList}" th:value="${i.id}" th:text="${i.name}"></option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Category:</td>
+                <td>
+                    <select th:field="*{productDto.categoryDto}">
+                        <option th:each="i : ${categoryDtoSet}" th:value="${i.id}" th:text="${i.name}"></option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>Description:</td>
                 <td>
-                 <input type="text" th:field="*{product.description}">
+                 <input type="text" th:field="*{productDto.description}">
                 </td>
             </tr>
             <tr>
                 <td>Price:</td>
-                <td><input type="number" th:field="*{product.price}"/></td>
+                <td><input type="number" th:field="*{productDto.price}"/></td>
             </tr>
             <tr>
                 <td>Screen:</td>
-                <td><input type="string" th:field="*{screen}"/></td>
+                <td><input type="text" th:field="*{screen}"/></td>
             </tr>
 
             <tr>
                 <td>Ram:</td>
-                <td><input type="string" th:field="*{ram}"/></td>
+                <td><input type="text" th:field="*{ram}"/></td>
             </tr>
 
             <tr>
                 <td>Camera:</td>
-                <td><input type="string" th:field="*{camera}"/></td>
+                <td><input type="text" th:field="*{camera}"/></td>
             </tr>
 
             <tr>
                 <td>BatteryCharge:</td>
-                <td><input type="string" th:field="*{batteryCharge}"/></td>
+                <td><input type="text" th:field="*{batteryCharge}"/></td>
             </tr>
             <tr>
                 <td>Operating System:</td>
-                <td><input type="string" th:field="*{operatingSystem}"/></td>
+                <td><input type="text" th:field="*{operatingSystem}"/></td>
             </tr>
 
             <tr>
                 <td>Storage Capacity:</td>
-                <td><input type="string" th:field="*{storageCapacity}"/></td>
+                <td><input type="text" th:field="*{storageCapacity}"/></td>
             </tr>
 
             <tr>
                 <td>Front Facing Camera:</td>
-                <td><input type="string" th:field="*{frontFacingCamera}"/></td>
+                <td><input type="text" th:field="*{frontFacingCamera}"/></td>
             </tr>
 
             <tr>
                 <td>Rear Camera:</td>
-                <td><input type="string" th:field="*{rearCamera}"/></td>
+                <td><input type="text" th:field="*{rearCamera}"/></td>
             </tr>
 
             <tr>
                 <td>Chip:</td>
-                <td><input type="string" th:field="*{chip}"/></td>
+                <td><input type="text" th:field="*{chip}"/></td>
             </tr>
 
             <tr>
                 <td>Sim:</td>
-                <td><input type="string" th:field="*{sim}"/></td>
+                <td><input type="text" th:field="*{sim}"/></td>
             </tr>
             <tr>
                 <td colspan="2">

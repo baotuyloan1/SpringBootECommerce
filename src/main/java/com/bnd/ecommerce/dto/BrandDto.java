@@ -3,6 +3,7 @@ package com.bnd.ecommerce.dto;
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 
 public class BrandDto extends CreateUpdateTimeStamp {
     @JsonProperty("id")
@@ -37,5 +38,19 @@ public class BrandDto extends CreateUpdateTimeStamp {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+//    để so sánh brand trong các option của edit product
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BrandDto brandDto = (BrandDto) o;
+        return id == brandDto.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

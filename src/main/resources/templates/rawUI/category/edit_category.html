@@ -25,7 +25,7 @@
           <label>Parent Category:
             <select th:field="*{parentCategory}">
               <option th:text="root" th:value="${null}"></option>
-              <option th:selected="${categoryItem.id == category.id}" th:each="categoryItem : ${categories}" th:value="${categoryItem.id}" th:text="${categoryItem.name}"></option>
+              <option th:each="categoryItem : ${categories}" th:value="${categoryItem.id}" th:text="${categoryItem.name}"></option>
             </select>
           </label>
         </td>

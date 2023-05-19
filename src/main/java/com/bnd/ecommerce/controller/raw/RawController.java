@@ -73,7 +73,7 @@ public class RawController {
       Authentication authentication) {
     if (pageNum < 0) pageNum = 1;
     Page<Category> pageCategories = categoryService.listAll(pageNum, sortField, sortDir, size);
-    Page<Product> pageProduct = productService.listAll(pageNum, sortField, sortDir, size);
+    Page<Product> pageProduct = productService.listAll(pageNum, sortField, sortDir, size, null);
     Page<Laptop> pageLaptop = laptopService.listAll(pageNum, sortField, sortDir, size);
     Page<Brand> pageBrand = brandService.pageBrands(pageNum, sortDir, sortField, size);
     List<Category> listCategories = pageCategories.getContent();

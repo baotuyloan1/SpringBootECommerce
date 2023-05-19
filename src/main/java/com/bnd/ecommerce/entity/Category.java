@@ -1,6 +1,5 @@
 package com.bnd.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -23,10 +22,9 @@ public class Category extends CreateUpdateTimeStamp {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "parent_id")
-  @JsonIgnore
   private Category parentCategory;
 
-  @OneToMany(mappedBy = "parentCategory", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "parentCategory", fetch = FetchType.EAGER)
   private Set<Category> children;
 
   public Category getParentCategory() {
@@ -78,5 +76,10 @@ public class Category extends CreateUpdateTimeStamp {
 
   public void setProducts(Set<Product> products) {
     this.products = products;
+  }
+
+  @Override
+  public String toString() {
+    return name;
   }
 }

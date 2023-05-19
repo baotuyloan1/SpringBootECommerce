@@ -7,6 +7,7 @@ import com.bnd.ecommerce.exception.NotFoundException;
 import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.repository.BrandRepository;
 import com.bnd.ecommerce.service.BrandService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,26 @@ public class BrandServiceImpl implements BrandService {
   @Override
   public List<Brand> listBrands() {
     return brandRepository.findAll();
+  }
+
+  @Override
+  public List<BrandDto> brandDtoList() {
+    List<Brand> brandList = brandRepository.findAll();
+    List<BrandDto> brandDtoList = new ArrayList<>();
+    for (Brand brand : brandList) {
+      brandDtoList.add(mapStructMapper.brandToBrandDto(brand));
+    }
+    return brandDtoList;
+  }
+
+  @Override
+  public BrandDto findBrandDtoById(int id) {
+    Optional<Brand> brand = brandRepository.findById(id);
+    if (brand.isPresent()) {
+      return mapStructMapper.brandToBrandDto(brand.get());
+    } else {
+      throw new NotFoundException("Brand Not found");
+    }
   }
 
   @Override
