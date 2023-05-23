@@ -1,56 +1,78 @@
 package com.bnd.ecommerce.entity.stock;
 
+import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.entity.Product;
-
+import com.bnd.ecommerce.entity.employee.Employee;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "stock")
-public class Stock {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long stockId;
+public class Stock extends CreateUpdateTimeStamp {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long stockId;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+  @ManyToOne
+  @JoinColumn(name = "product_id")
+  private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id")
-    private Warehouse warehouse;
+  @ManyToOne
+  @JoinColumn(name = "warehouse_id")
+  private Warehouse warehouse;
 
+  private int quantityInStock;
 
-    private int quantityInStock;
+  private boolean enable;
 
-    public long getStockId() {
-        return stockId;
-    }
+  public boolean isEnable() {
+    return enable;
+  }
 
-    public void setStockId(long stockId) {
-        this.stockId = stockId;
-    }
+  public void setEnable(boolean enable) {
+    this.enable = enable;
+  }
 
-    public Product getProduct() {
-        return product;
-    }
+  public Employee getEmployee() {
+    return employee;
+  }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+  public void setEmployee(Employee employee) {
+    this.employee = employee;
+  }
 
-    public Warehouse getWarehouse() {
-        return warehouse;
-    }
+  @ManyToOne
+  @JoinColumn(name = "employee_id")
+  private Employee employee;
 
-    public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
-    }
+  public long getStockId() {
+    return stockId;
+  }
 
-    public int getQuantityInStock() {
-        return quantityInStock;
-    }
+  public void setStockId(long stockId) {
+    this.stockId = stockId;
+  }
 
-    public void setQuantityInStock(int quantityInStock) {
-        this.quantityInStock = quantityInStock;
-    }
+  public Product getProduct() {
+    return product;
+  }
+
+  public void setProduct(Product product) {
+    this.product = product;
+  }
+
+  public Warehouse getWarehouse() {
+    return warehouse;
+  }
+
+  public void setWarehouse(Warehouse warehouse) {
+    this.warehouse = warehouse;
+  }
+
+  public int getQuantityInStock() {
+    return quantityInStock;
+  }
+
+  public void setQuantityInStock(int quantityInStock) {
+    this.quantityInStock = quantityInStock;
+  }
 }

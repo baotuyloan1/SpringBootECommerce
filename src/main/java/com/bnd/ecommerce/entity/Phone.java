@@ -4,13 +4,14 @@ import javax.persistence.*;
 
 @Entity
 @Table
-public class Phone extends CreateUpdateTimeStamp {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+public class Phone {
 
+
+  @Id private long productId;
+
+  @MapsId
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_id")
+  @JoinColumn(name = "product_id", referencedColumnName = "id")
   private Product product;
 
   private String screen;
@@ -29,6 +30,14 @@ public class Phone extends CreateUpdateTimeStamp {
 
   private String sim;
 
+  public long getProductId() {
+    return productId;
+  }
+
+  public void setProductId(long productId) {
+    this.productId = productId;
+  }
+
   public Product getProduct() {
     return product;
   }
@@ -43,14 +52,6 @@ public class Phone extends CreateUpdateTimeStamp {
 
   public void setSim(String sim) {
     this.sim = sim;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
   }
 
   public String getScreen() {

@@ -1,12 +1,12 @@
 package com.bnd.ecommerce.dto;
 
+import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-
-import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import org.hibernate.validator.constraints.Length;
 
 public class ProductDto extends CreateUpdateTimeStamp {
@@ -23,11 +23,36 @@ public class ProductDto extends CreateUpdateTimeStamp {
   @Max(value = 50000, message = "Product price must be less than or equal to 50000")
   private float price;
 
+  private String image;
+  private PhoneDto phoneDto;
+
   private BrandDto brandDto;
-
-
   private CategoryDto categoryDto;
 
+  private boolean status;
+
+  public Set<StockDto> stockDtoSetSet = new HashSet<>();
+
+  public Set<StockDto> getStockDtoSetSet() {
+    return stockDtoSetSet;
+  }
+
+  public void setStockDtoSetSet(Set<StockDto> stockDtoSetSet) {
+    this.stockDtoSetSet = stockDtoSetSet;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
+  }
+
+  public String getPhotoImagePath() {
+    if (image == null || id == 0) return null;
+    return "/phone-photos/" + id + "/" + image;
+  }
 
   public CategoryDto getCategoryDto() {
     return categoryDto;
@@ -37,9 +62,6 @@ public class ProductDto extends CreateUpdateTimeStamp {
     this.categoryDto = categoryDto;
   }
 
-  private PhoneDto phoneDto;
-
-
   public PhoneDto getPhoneDto() {
     return phoneDto;
   }
@@ -48,12 +70,9 @@ public class ProductDto extends CreateUpdateTimeStamp {
     this.phoneDto = phoneDto;
   }
 
-
-
   private Set<ProductLogDto> productLogDtoSet;
 
-
-  private Set<ProductDetailImageDto> productDetailImageDtoSet;
+  private Set<ImageDetailDto> imageDetailDtoSet;
 
   public long getId() {
     return id;
@@ -103,12 +122,11 @@ public class ProductDto extends CreateUpdateTimeStamp {
     this.productLogDtoSet = productLogDtoSet;
   }
 
-
-  public Set<ProductDetailImageDto> getProductDetailImageDtoSet() {
-    return productDetailImageDtoSet;
+  public Set<ImageDetailDto> getImageDetailDtoSet() {
+    return imageDetailDtoSet;
   }
 
-  public void setProductDetailImageDtoSet(Set<ProductDetailImageDto> productDetailImageDtoSet) {
-    this.productDetailImageDtoSet = productDetailImageDtoSet;
+  public void setImageDetailDtoSet(Set<ImageDetailDto> imageDetailDtoSet) {
+    this.imageDetailDtoSet = imageDetailDtoSet;
   }
 }

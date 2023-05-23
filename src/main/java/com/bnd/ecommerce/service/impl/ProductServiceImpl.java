@@ -1,11 +1,13 @@
 package com.bnd.ecommerce.service.impl;
 
+import com.bnd.ecommerce.dto.ImageDetailDto;
 import com.bnd.ecommerce.dto.PhoneDto;
 import com.bnd.ecommerce.entity.Category;
 import com.bnd.ecommerce.entity.Product;
 import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.repository.ProductRepository;
 import com.bnd.ecommerce.service.ProductService;
+import com.bnd.ecommerce.util.FileUtil;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -78,6 +80,10 @@ public class ProductServiceImpl implements ProductService {
             .setCategoryDto(
                 mapStructMapper.categoryToCategoryDto(
                     getMainCategory(foundProduct.getCategories())));
+        Set<ImageDetailDto> imageDetailDtoSet = phoneDto.getProductDto().getImageDetailDtoSet();
+        for (ImageDetailDto imageDetailDto : imageDetailDtoSet) {
+            imageDetailDto.setProductDtoId(id);
+        }
         return phoneDto;
       }
     }
@@ -87,6 +93,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional
   @Override
   public boolean deleteProductById(long id) {
+    FileUtil.deleteImageDirByProductId(id);
     productRepository.deleteProductCategoryByProductId(id);
     productRepository.deleteById(id);
     return !productRepository.existsById(id);

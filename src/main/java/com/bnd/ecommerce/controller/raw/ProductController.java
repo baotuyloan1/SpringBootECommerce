@@ -1,17 +1,12 @@
 package com.bnd.ecommerce.controller.raw;
 
-import com.bnd.ecommerce.dto.BrandDto;
-import com.bnd.ecommerce.dto.CategoryDto;
-import com.bnd.ecommerce.dto.PhoneDto;
-import com.bnd.ecommerce.dto.ProductDto;
+import com.bnd.ecommerce.dto.*;
+import com.bnd.ecommerce.entity.Laptop;
 import com.bnd.ecommerce.entity.Phone;
 import com.bnd.ecommerce.entity.Product;
 import com.bnd.ecommerce.exception.CreateFailException;
 import com.bnd.ecommerce.exception.DeleteFailException;
-import com.bnd.ecommerce.service.BrandService;
-import com.bnd.ecommerce.service.CategoryService;
-import com.bnd.ecommerce.service.PhoneService;
-import com.bnd.ecommerce.service.ProductService;
+import com.bnd.ecommerce.service.*;
 import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
@@ -20,26 +15,32 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("/rawUI/products")
+@RequestMapping("/rawUI/warehouses")
 public class ProductController {
 
   private final ProductService productService;
   private final PhoneService phoneService;
   private final BrandService brandService;
+
+  private final LaptopService laptopService;
   private final CategoryService categoryService;
 
   private static final String REDIRECT_PRODUCTS = "redirect:/rawUI/products/1";
+  private static final String VIEW_NEW = "rawUI/product/new_phone";
 
   public ProductController(
       ProductService productService,
       PhoneService phoneService,
       BrandService brandService,
+      LaptopService laptopService,
       CategoryService categoryService) {
     this.productService = productService;
     this.phoneService = phoneService;
     this.brandService = brandService;
+    this.laptopService = laptopService;
     this.categoryService = categoryService;
   }
 
@@ -54,7 +55,6 @@ public class ProductController {
     Page<Product> productPage =
         productService.listAll(numPage, sortField, sortDir, numbersItem, keyword);
     List<Product> products = productPage.getContent();
-
     model.addAttribute("productList", products);
     model.addAttribute("keyword", keyword);
     model.addAttribute("currentPage", numPage);
@@ -75,39 +75,47 @@ public class ProductController {
     PhoneDto phoneDto = new PhoneDto();
     productDto.setBrandDto(brandDto);
     phoneDto.setProductDto(productDto);
+    productDto.setPhoneDto(phoneDto);
+    loadData(model);
+    model.addAttribute("phoneDto", phoneDto);
+    return VIEW_NEW;
+  }
+
+  private void loadData(Model model) {
     List<BrandDto> brandDtoList = brandService.brandDtoList();
     Set<CategoryDto> categoryDtoSet = categoryService.categoryDtoSet();
     model.addAttribute("brandDtoList", brandDtoList);
     model.addAttribute("categoryDtoSet", categoryDtoSet);
-    productDto.setPhoneDto(phoneDto);
-    model.addAttribute("phoneDto", phoneDto);
-    return "rawUI/product/new_phone";
   }
 
   @PostMapping("/createPhone")
   public String savePhone(
       @Valid @ModelAttribute("phoneDto") PhoneDto phoneDto,
       BindingResult bindingResult,
+      @RequestParam("imageProduct") MultipartFile mainImage,
+      @RequestParam("imagesDetail") MultipartFile[] imagesDetail,
       Model model) {
-    if (bindingResult.hasErrors()) {
-      List<BrandDto> brandDtoList = brandService.brandDtoList();
-      Set<CategoryDto> categoryDtoSet = categoryService.categoryDtoSet();
-      model.addAttribute("brandDtoList", brandDtoList);
-      model.addAttribute("categoryDtoSet", categoryDtoSet);
-      return "rawUI/product/new_phone";
+    if (bindingResult.hasErrors() || mainImage.isEmpty()) {
+      loadData(model);
+      if (mainImage.isEmpty()) {
+        model.addAttribute("imageEmptyError", "Image can't empty");
+        model.addAttribute("imageIsEmpty", true);
+      }
+      return VIEW_NEW;
     }
-    Phone savedPhone = phoneService.save(phoneDto);
-    if (savedPhone != null) return REDIRECT_PRODUCTS;
-    else throw new CreateFailException("Create phone fail");
+    Phone savedPhone;
+    if (!mainImage.isEmpty()) {
+      savedPhone = phoneService.create(phoneDto, mainImage, imagesDetail);
+      if (savedPhone != null) return REDIRECT_PRODUCTS;
+      else throw new CreateFailException("Create phone fail");
+    }
+    return VIEW_NEW;
   }
 
   @GetMapping("/editProduct/{id}")
   public String showEditProduct(@PathVariable("id") long id, Model model) {
     Object object = productService.findById(id);
-    List<BrandDto> brandDtoList = brandService.brandDtoList();
-    Set<CategoryDto> categoryDtoSet = categoryService.categoryDtoSet();
-    model.addAttribute("brandDtoList", brandDtoList);
-    model.addAttribute("categoryDtoSet", categoryDtoSet);
+    loadData(model);
     if (object instanceof PhoneDto phoneDto) {
       model.addAttribute("phoneDto", phoneDto);
       return "rawUI/product/edit_phone";
@@ -116,18 +124,16 @@ public class ProductController {
     }
   }
 
-  @PostMapping("/updatePhone/{id}")
-  public String updateProduct(
-      @ModelAttribute("phoneDto") PhoneDto phoneDto, @PathVariable("id") long id, Model model) {
-    phoneDto.getProductDto().setId(id);
-    Phone savedPhone = phoneService.save(phoneDto);
+  @PostMapping("/updatePhone")
+  public String updatePhone(
+      @ModelAttribute("phoneDto") PhoneDto phoneDto,
+      Model model,
+      @RequestParam("imageProduct") MultipartFile multipartFile) {
+    Phone savedPhone = phoneService.update(phoneDto, multipartFile);
     if (savedPhone != null) {
       return REDIRECT_PRODUCTS;
     } else {
-      List<BrandDto> brandDtoList = brandService.brandDtoList();
-      Set<CategoryDto> categoryDtoSet = categoryService.categoryDtoSet();
-      model.addAttribute("brandDtoList", brandDtoList);
-      model.addAttribute("categoryDtoSet", categoryDtoSet);
+      loadData(model);
       return "rawUI/product/edit_phone";
     }
   }
@@ -137,5 +143,25 @@ public class ProductController {
     boolean isDeleted = productService.deleteProductById(id);
     if (isDeleted) return REDIRECT_PRODUCTS;
     else throw new DeleteFailException("Delete Product fail");
+  }
+
+  @GetMapping("/newLaptop")
+  public String showNewLaptop(Model model) {
+    LaptopDto laptopDto = new LaptopDto();
+    loadData(model);
+    model.addAttribute("laptopDto", laptopDto);
+    return "rawUI/product/new_laptop";
+  }
+
+  @PostMapping("/saveLaptop")
+  public String saveLaptop(@Valid @ModelAttribute("laptopDto") LaptopDto laptopDto,
+                           BindingResult bindingResult,
+                           @RequestParam("imageProduct")MultipartFile imageProduct,
+                           @RequestParam("imageDetailArray")MultipartFile[] imageDetailArray) {
+    Laptop savedLaptop = laptopService.createLaptop(laptopDto);
+    if (savedLaptop != null){
+      return REDIRECT_PRODUCTS;
+    }
+    return "rawUI/product/new_laptop";
   }
 }

@@ -5,7 +5,8 @@ import org.hibernate.validator.constraints.URL;
 import javax.persistence.*;
 
 @Entity
-public class ProductDetailImage extends CreateTimestamp{
+@Table(name = "product_detail_image")
+public class ImageDetail extends CreateTimestamp{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,6 +14,8 @@ public class ProductDetailImage extends CreateTimestamp{
 
     @URL
     private String url;
+
+    private String name;
 
     private float size;
 
@@ -60,5 +63,13 @@ public class ProductDetailImage extends CreateTimestamp{
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

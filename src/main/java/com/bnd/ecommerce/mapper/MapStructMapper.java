@@ -1,11 +1,10 @@
 package com.bnd.ecommerce.mapper;
 
 import com.bnd.ecommerce.dto.*;
-import com.bnd.ecommerce.entity.Brand;
-import com.bnd.ecommerce.entity.Category;
-import com.bnd.ecommerce.entity.Phone;
-import com.bnd.ecommerce.entity.Product;
+import com.bnd.ecommerce.entity.*;
 import com.bnd.ecommerce.entity.employee.Employee;
+import com.bnd.ecommerce.entity.stock.Stock;
+import com.bnd.ecommerce.entity.stock.Warehouse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -24,6 +23,7 @@ public interface MapStructMapper {
 
   @Mapping(source = "brand", target = "brandDto")
   @Mapping(target = "phoneDto", ignore = true)
+  @Mapping(target = "imageDetailDtoSet", source = "imageDetailSet")
   ProductDto productToProductDto(Product product);
 
   Category categoryDtoToCategory(CategoryDto categoryDto);
@@ -32,6 +32,7 @@ public interface MapStructMapper {
 
   @Mapping(source = "brandDto", target = "brand")
   @Mapping(source = "phoneDto", target = "phone")
+  @Mapping(source = "imageDetailDtoSet", target = "imageDetailSet")
   Product productDtoToProduct(ProductDto productDto);
 
   @Mapping(source = "product", target = "productDto")
@@ -39,4 +40,18 @@ public interface MapStructMapper {
 
   @Mapping(source = "productDto", target = "product")
   Phone phoneDtoToPhone(PhoneDto phoneDto);
+
+  ImageDetail imageDetailDtoToImageDetail(ImageDetailDto imageDetailDto);
+
+  ImageDetailDto imageDetailToImageDetailDto(ImageDetail imageDetail);
+
+  Stock stockDtoToStock(StockDto stockDto);
+
+  @Mapping(source = "product", target = "productDto")
+  @Mapping(source = "warehouse", target = "warehouseDto")
+  StockDto stockToStockDto(Stock stock);
+
+  Warehouse wareHouseDtoToWareHouse(WarehouseDto warehouseDto);
+
+  WarehouseDto wareHouseToWareHouseDto(Warehouse warehouse);
 }

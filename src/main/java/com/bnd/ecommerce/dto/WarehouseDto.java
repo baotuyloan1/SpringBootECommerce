@@ -1,14 +1,9 @@
-package com.bnd.ecommerce.entity.stock;
+package com.bnd.ecommerce.dto;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
-import javax.persistence.*;
 
-@Entity
-@Table(name = "warehouse")
-public class Warehouse extends CreateUpdateTimeStamp {
+public class WarehouseDto extends CreateUpdateTimeStamp {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
   private String warehouseName;
@@ -16,6 +11,26 @@ public class Warehouse extends CreateUpdateTimeStamp {
   private String address;
 
   private String phone;
+
+  private StockDto stockDto;
+
+  private boolean isEnable;
+
+  public boolean isEnable() {
+    return isEnable;
+  }
+
+  public void setEnable(boolean enable) {
+    isEnable = enable;
+  }
+
+  public StockDto getStockDto() {
+    return stockDto;
+  }
+
+  public void setStockDto(StockDto stockDto) {
+    this.stockDto = stockDto;
+  }
 
   public int getId() {
     return id;

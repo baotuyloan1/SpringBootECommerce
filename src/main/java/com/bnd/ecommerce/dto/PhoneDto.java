@@ -6,11 +6,10 @@ import org.hibernate.validator.constraints.Length;
 
 public class PhoneDto  {
 
-  private int id;
+  private long productId;
 
   @Valid private ProductDto productDto;
 
-  @Length(min = 3, max = 100, message = "Screen mus higher than 3")
   private String screen;
 
   private String ram;
@@ -24,12 +23,13 @@ public class PhoneDto  {
   private String chip;
   private String sim;
 
-  public int getId() {
-    return id;
+
+  public long getProductId() {
+    return productId;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public void setProductId(long productId) {
+    this.productId = productId;
   }
 
   public ProductDto getProductDto() {

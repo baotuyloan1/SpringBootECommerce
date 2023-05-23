@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create New Product</title>
+    <title>Create New Laptop</title>
 </head>
 <style>
     .error {
@@ -15,7 +15,7 @@
 <div align="center">
     <h1>Create New Product</h1>
     <br/>
-    <form th:action="@{'/rawUI/products/createPhone'}" th:object="${phoneDto}" method="post"
+    <form th:action="@{'/rawUI/products/createLaptop'}" th:object="${laptopDto}" method="post"
           enctype="multipart/form-data">
         <table border="0" cellpadding="10">
             <tr>
@@ -75,13 +75,13 @@
             </tr>
 
             <tr>
-                <td>Camera:</td>
-                <td><input type="text" th:field="*{camera}"/></td>
+                <td>Cpu:</td>
+                <td><input type="text" th:field="*{cpu}"/></td>
             </tr>
 
             <tr>
-                <td>BatteryCharge:</td>
-                <td><input type="text" th:field="*{batteryCharge}"/></td>
+                <td>HardDrive:</td>
+                <td><input type="text" th:field="*{hardDrive}"/></td>
             </tr>
             <tr>
                 <td>Operating System:</td>
@@ -89,29 +89,25 @@
             </tr>
 
             <tr>
-                <td>Storage Capacity:</td>
-                <td><input type="text" th:field="*{storageCapacity}"/></td>
+                <td>Release Year:</td>
+                <td><input type="number" th:field="*{releaseYear}"/></td>
             </tr>
 
             <tr>
-                <td>Front Facing Camera:</td>
-                <td><input type="text" th:field="*{frontFacingCamera}"/></td>
+                <td>Connector:</td>
+                <td><input type="text" th:field="*{connector}"/></td>
             </tr>
 
             <tr>
-                <td>Rear Camera:</td>
-                <td><input type="text" th:field="*{rearCamera}"/></td>
+                <td>Material</td>
+                <td><input type="text" th:field="*{material}"/></td>
             </tr>
 
             <tr>
-                <td>Chip:</td>
-                <td><input type="text" th:field="*{chip}"/></td>
+                <td>Size Weight:</td>
+                <td><input type="text" th:field="*{sizeWeight}"/></td>
             </tr>
 
-            <tr>
-                <td>Sim:</td>
-                <td><input type="text" th:field="*{sim}"/></td>
-            </tr>
             <tr>
                 <td colspan="2">
                     <button type="submit">Save</button>

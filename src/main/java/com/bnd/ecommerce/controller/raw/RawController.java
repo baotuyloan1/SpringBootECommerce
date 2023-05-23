@@ -2,6 +2,8 @@ package com.bnd.ecommerce.controller.raw;
 
 import com.bnd.ecommerce.entity.*;
 import com.bnd.ecommerce.entity.employee.Employee;
+import com.bnd.ecommerce.entity.stock.Stock;
+import com.bnd.ecommerce.entity.stock.Warehouse;
 import com.bnd.ecommerce.exception.NotFoundException;
 import com.bnd.ecommerce.service.*;
 import java.util.ArrayList;
@@ -28,6 +30,10 @@ public class RawController {
   private final RoleService roleService;
   private final EmployeeService employeeService;
 
+  private final WareHouseService wareHouseService;
+
+  private final StockService stockService;
+
   private final String REDIRECT_HOME = "redirect:/rawUI/";
 
   public RawController(
@@ -36,18 +42,22 @@ public class RawController {
       BrandService brandService,
       CategoryService categoryService,
       RoleService roleService,
-      EmployeeService employeeService) {
+      EmployeeService employeeService,
+      WareHouseService wareHouseService,
+      StockService stockService) {
     this.productService = productService;
     this.laptopService = laptopService;
     this.brandService = brandService;
     this.categoryService = categoryService;
     this.roleService = roleService;
     this.employeeService = employeeService;
+    this.wareHouseService = wareHouseService;
+    this.stockService = stockService;
   }
 
   @GetMapping("/")
   public String showAll(Model model, Authentication authentication) {
-    return viewPage(1, "id", "desc", 5, model, authentication);
+    return viewPage(1, "id", "desc", 3, model, authentication);
   }
 
   @GetMapping("/newPhone")
@@ -76,12 +86,17 @@ public class RawController {
     Page<Product> pageProduct = productService.listAll(pageNum, sortField, sortDir, size, null);
     Page<Laptop> pageLaptop = laptopService.listAll(pageNum, sortField, sortDir, size);
     Page<Brand> pageBrand = brandService.pageBrands(pageNum, sortDir, sortField, size);
+    Page<Warehouse> warehousePage =
+        wareHouseService.pageWareHouse(pageNum, sortField, sortDir, size, null);
+    Page<Stock> stockPage = stockService.stockPage(pageNum, sortField, sortDir, size, null);
     List<Category> listCategories = pageCategories.getContent();
     List<Product> listProducts = pageProduct.getContent();
     List<Laptop> listLaptops = pageLaptop.getContent();
     List<Role> roles = roleService.listRoles();
     List<Brand> listBrands = pageBrand.getContent();
+    List<Warehouse> warehouseList = warehousePage.getContent();
     Page<Employee> employeePage = employeeService.listAll(size, pageNum, sortField, sortDir, null);
+
     model.addAttribute("listEmployees", employeePage.getContent());
     model.addAttribute("listRoles", roles);
     model.addAttribute("listCategories", listCategories);
@@ -93,7 +108,7 @@ public class RawController {
     model.addAttribute("listBrands", listBrands);
     model.addAttribute("currentPageCategories", pageNum);
     model.addAttribute("totalPagesCategories", pageCategories.getTotalPages());
-
+    model.addAttribute("warehouseList", warehouseList);
     ArrayList<String> currentRoles = new ArrayList<>();
     if (authentication != null) {
       for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {

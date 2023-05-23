@@ -1,5 +1,6 @@
 package com.bnd.ecommerce.entity;
 
+import com.bnd.ecommerce.entity.stock.Stock;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -28,6 +29,8 @@ public class Product extends CreateUpdateTimeStamp {
 
   @ManyToOne private Brand brand;
 
+  private boolean status;
+
   public Brand getBrand() {
     return brand;
   }
@@ -42,12 +45,12 @@ public class Product extends CreateUpdateTimeStamp {
   @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public Phone phone;
 
-//  @OneToOne(fetch = FetchType.EAGER)
-//  public Laptop laptop;
-//
-//  @OneToOne
-//  public Tablet tablet;
+  @OneToOne(fetch = FetchType.EAGER)
+  public Laptop laptop;
 
+  @OneToOne public Tablet tablet;
+
+  @OneToMany public Set<Stock> stockSet = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(
@@ -55,6 +58,51 @@ public class Product extends CreateUpdateTimeStamp {
       joinColumns = @JoinColumn(name = "product_id"),
       inverseJoinColumns = @JoinColumn(name = "category_id"))
   private Set<Category> categories;
+
+  private String image;
+
+  public Tablet getTablet() {
+    return tablet;
+  }
+
+  public void setTablet(Tablet tablet) {
+    this.tablet = tablet;
+  }
+
+  public Set<Stock> getStockSet() {
+    return stockSet;
+  }
+
+  public void setStockSet(Set<Stock> stockSet) {
+    this.stockSet = stockSet;
+  }
+
+  public Laptop getLaptop() {
+    return laptop;
+  }
+
+  public void setLaptop(Laptop laptop) {
+    this.laptop = laptop;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
+  }
+
+  public void addImageDetail(ImageDetail imageDetail) {
+    if (imageDetailSet == null) imageDetailSet = new HashSet<>();
+    imageDetailSet.add(imageDetail);
+  }
+
+  @Transient
+  public String getPhotoImagePath() {
+    if (image == null || id == 0) return null;
+    return "/phone-photos/" + id + "/" + image;
+  }
 
   public Phone getPhone() {
     return phone;
@@ -64,8 +112,8 @@ public class Product extends CreateUpdateTimeStamp {
     this.phone = phone;
   }
 
-  @OneToMany(mappedBy = "product")
-  private Set<ProductDetailImage> productDetailImages;
+  @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+  private Set<ImageDetail> imageDetailSet;
 
   public long getId() {
     return id;
@@ -115,17 +163,16 @@ public class Product extends CreateUpdateTimeStamp {
     this.categories = categories;
   }
 
-  public Set<ProductDetailImage> getProductDetailImages() {
-    return productDetailImages;
+  public Set<ImageDetail> getImageDetailSet() {
+    return imageDetailSet;
   }
 
-  public void setProductDetailImages(Set<ProductDetailImage> productDetailImages) {
-    this.productDetailImages = productDetailImages;
+  public void setImageDetailSet(Set<ImageDetail> imageDetails) {
+    this.imageDetailSet = imageDetails;
   }
 
   public void addCategory(Category category) {
     if (categories == null) categories = new HashSet<>();
     this.categories.add(category);
   }
-
 }
