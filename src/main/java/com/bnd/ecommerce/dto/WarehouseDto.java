@@ -14,16 +14,6 @@ public class WarehouseDto extends CreateUpdateTimeStamp {
 
   private StockDto stockDto;
 
-  private boolean isEnable;
-
-  public boolean isEnable() {
-    return isEnable;
-  }
-
-  public void setEnable(boolean enable) {
-    isEnable = enable;
-  }
-
   public StockDto getStockDto() {
     return stockDto;
   }

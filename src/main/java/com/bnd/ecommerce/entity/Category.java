@@ -27,7 +27,7 @@ public class Category extends CreateUpdateTimeStamp {
   @OneToMany(mappedBy = "parentCategory", fetch = FetchType.EAGER)
   private Set<Category> children;
 
-  private boolean status;
+
 
   public Category getParentCategory() {
     return parentCategory;

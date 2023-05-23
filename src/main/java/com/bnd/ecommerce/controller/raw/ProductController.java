@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("/rawUI/warehouses")
+@RequestMapping("/rawUI/products")
 public class ProductController {
 
   private final ProductService productService;

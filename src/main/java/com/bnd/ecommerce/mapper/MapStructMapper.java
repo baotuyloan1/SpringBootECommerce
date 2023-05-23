@@ -45,10 +45,10 @@ public interface MapStructMapper {
 
   ImageDetailDto imageDetailToImageDetailDto(ImageDetail imageDetail);
 
+
   Stock stockDtoToStock(StockDto stockDto);
 
-  @Mapping(source = "product", target = "productDto")
-  @Mapping(source = "warehouse", target = "warehouseDto")
+
   StockDto stockToStockDto(Stock stock);
 
   Warehouse wareHouseDtoToWareHouse(WarehouseDto warehouseDto);

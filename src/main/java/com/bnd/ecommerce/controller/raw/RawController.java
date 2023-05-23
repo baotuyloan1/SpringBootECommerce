@@ -97,6 +97,7 @@ public class RawController {
     List<Warehouse> warehouseList = warehousePage.getContent();
     Page<Employee> employeePage = employeeService.listAll(size, pageNum, sortField, sortDir, null);
 
+    model.addAttribute("stockList", stockPage.getContent());
     model.addAttribute("listEmployees", employeePage.getContent());
     model.addAttribute("listRoles", roles);
     model.addAttribute("listCategories", listCategories);

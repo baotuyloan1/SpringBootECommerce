@@ -1,17 +1,25 @@
 package com.bnd.ecommerce.service.impl;
 
 import com.bnd.ecommerce.dto.StockDto;
+import com.bnd.ecommerce.entity.Product;
+import com.bnd.ecommerce.entity.employee.Employee;
 import com.bnd.ecommerce.entity.stock.Stock;
-import com.bnd.ecommerce.exception.CreateFailException;
+import com.bnd.ecommerce.entity.stock.StockID;
+import com.bnd.ecommerce.entity.stock.Warehouse;
 import com.bnd.ecommerce.exception.NotFoundException;
 import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.repository.StockRepository;
+import com.bnd.ecommerce.service.EmployeeService;
 import com.bnd.ecommerce.service.StockService;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,9 +29,15 @@ public class StockServiceImpl implements StockService {
 
   private final MapStructMapper mapStructMapper;
 
-  public StockServiceImpl(StockRepository stockRepository, MapStructMapper mapStructMapper) {
+  private final EmployeeService employeeService;
+
+  public StockServiceImpl(
+      StockRepository stockRepository,
+      MapStructMapper mapStructMapper,
+      EmployeeService employeeService) {
     this.stockRepository = stockRepository;
     this.mapStructMapper = mapStructMapper;
+    this.employeeService = employeeService;
   }
 
   @Override
@@ -40,24 +54,86 @@ public class StockServiceImpl implements StockService {
   }
 
   @Override
-  public StockDto findStockDtoById(long id) {
-    Optional<Stock> stock = stockRepository.findById(id);
+  public StockDto findStockDtoById(long productId, int warehouseId) {
+    Optional<Stock> stock = stockRepository.findById(getStockID(productId, warehouseId));
     if (stock.isPresent()) {
       StockDto stockDto = mapStructMapper.stockToStockDto(stock.get());
+      stockDto.setProductId(productId);
+      stockDto.setWarehouseId(warehouseId);
       return stockDto;
     } else throw new NotFoundException("Stock not found");
   }
 
-  @Override
-  public boolean deleteById(long id) {
-    stockRepository.deleteById(id);
-    return !stockRepository.existsById(id);
+  StockID getStockID(long productId, int warehouseId) {
+    Product product = new Product();
+    product.setId(productId);
+    Warehouse warehouse = new Warehouse();
+    warehouse.setId(warehouseId);
+    return new StockID(product, warehouse);
   }
 
   @Override
-  public Stock save(StockDto stockDto) {
+  public boolean deleteById(long productId, int warehouseId) {
+    StockID stockID = getStockID(productId, warehouseId);
+    stockRepository.deleteById(stockID);
+    return !stockRepository.existsById(stockID);
+  }
+
+  @Override
+  public Stock create(StockDto stockDto, Authentication authentication) {
+    StockID id = getStockID(stockDto.getProductId(), stockDto.getWarehouseId());
+
     Stock stock = mapStructMapper.stockDtoToStock(stockDto);
-    if (stock != null) return stock;
-    else throw new CreateFailException("Create fail");
+    stock.setId(id);
+    Employee employee = employeeService.findByEmail(authentication.getName());
+
+    stock.setUpdatedEmployee(employee);
+
+    stock.setCreatedEmployee(employee);
+    return stockRepository.save(stock);
+  }
+
+  @Override
+  @Transactional
+  public void update(StockDto stockDto, Authentication authentication, StockDto oldStockDto) {
+    Employee employee = employeeService.findByEmail(authentication.getName());
+    if (stockDto.getProductId() == oldStockDto.getProductId()
+        && stockDto.getWarehouseId() == oldStockDto.getWarehouseId()) {
+      stockRepository.updateQuantity(
+          stockDto.getQuantityInStock(),
+          getStockID(stockDto.getProductId(), stockDto.getWarehouseId()),
+          new Timestamp(new Date().getTime()),
+          employee.getId());
+    } else {
+      stockRepository.update(
+          stockDto.getProductId(),
+          stockDto.getWarehouseId(),
+          stockDto.getQuantityInStock(),
+          oldStockDto.getProductId(),
+          oldStockDto.getWarehouseId(),
+          new Timestamp(new Date().getTime()),
+          employee.getId());
+    }
+  }
+
+  @Override
+  public boolean isExisted(long productId, int warehouseId) {
+    return stockRepository.existsById(getStockID(productId, warehouseId));
+  }
+
+  @Override
+  @Transactional
+  public long addQuantity(long productId, int warehouseId, long quantity) {
+    stockRepository.addQuantity(productId, warehouseId, quantity);
+    return stockRepository.getQuantityById(productId, warehouseId);
+  }
+
+  @Override
+  public boolean isExisted(StockDto newStockDto, StockDto oldStockDto) {
+    long count =
+        stockRepository.countByNewStockId(
+            getStockID(newStockDto.getProductId(), newStockDto.getWarehouseId()),
+            getStockID(oldStockDto.getProductId(), oldStockDto.getWarehouseId()));
+    return count > 0;
   }
 }

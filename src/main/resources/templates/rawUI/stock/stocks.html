@@ -13,7 +13,7 @@
 <body>
 <div align="center">
 
-    <form th:action="@{/rawUI/admin/warehouses/1}">
+    <form th:action="@{/rawUI/manager/stocks/1}">
         Filter:<input type="text" size="50" th:value="${keyword}" name="keyword" id="keyword" required>
         &nbsp;
         <input type="submit" value="Search"/>
@@ -42,12 +42,14 @@
     <div th:if="${param.logoutStatus}">
         <h3>You have been logged out</h3>
     </div>
-
+    <div>
+        <a href="/rawUI/">Home</a>
+    </div>
 
     <div>
-        <h1>List Warehouse</h1>
+        <h1>List Stocks</h1>
         <div>
-            <a href="/rawUI/admin/warehouses/newWarehouse">Add new warehouse</a>
+            <a href="/rawUI/manager/stocks/newStock">Add new stock</a>
         </div>
 
         <br/>
@@ -71,29 +73,57 @@
             <thead>
             <tr>
                 <th>
-                    <a th:href="@{'/rawUI/admin/warehouses/'+${currentPage} +'?sortField=id&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
-                        Warehouse ID</a>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=id&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Stock ID</a>
                 </th>
                 <th>
-                    <a th:href="@{'/rawUI/admin/warehouses/'+${currentPage} +'?sortField=address&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
-                        Address</a>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=id.product.id&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Product Id</a>
                 </th>
                 <th>
-                    <a th:href="@{'/rawUI/admin/warehouses/'+${currentPage} +'?sortField=phone&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
-                        Phone</a></th>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=id.product.name&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Product Name</a></th>
                 <th>
-                    <a th:href="@{'/rawUI/admin/warehouses/'+${currentPage} +'?sortField=warehouseName&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
-                        Warehouse name</a>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=id.warehouse.id&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Warehouse Id</a>
                 </th>
                 <th>
-                    <a th:href="@{'/rawUI/admin/warehouses/'+${currentPage} +'?sortField=createTime&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">Create
-                        Time</a>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=id.warehouse.warehouseName&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Warehouse Name</a>
                 </th>
 
+                <th>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=createdEmployee.id&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Employee ID Created </a>
+                </th>
+                <th>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=createdEmployee.lastName&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Employee Name Created</a>
+                </th>
 
                 <th>
-                    <a th:href="@{'/rawUI/admin/warehouses/'+${currentPage} +'?sortField=updateTime&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=createdEmployee.id&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Employee ID Updated </a>
+                </th>
+                <th>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=createdEmployee.lastName&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Employee Name Updated</a>
+                </th>
+
+                <th>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=quantityInStock&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Quantity</a>
+                </th>
+                <th>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=updatedEmployee&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
+                        Create Time</a>
+                </th>
+                <th>
+                    <a th:href="@{'/rawUI/manager/stocks/'+${currentPage} +'?sortField=updatedEmployee&sortDir='+${reverseSortDir}+'&itemsNumber='+${numberElement}}">
                         Update Time</a>
+                </th>
+                <th>
+                    Add Quantity
                 </th>
                 <th>
                     Action
@@ -102,18 +132,27 @@
             </tr>
             </thead>
 
-            <div th:if="${not #lists.isEmpty(warehouseList)}">
+            <div th:if="${not #lists.isEmpty(stockList)}">
                 <tbody>
-                <tr th:each="warehouse : ${warehouseList}">
-                    <td th:text="${warehouse.id}"></td>
-                    <td th:text="${warehouse.address}"></td>
-                    <td th:text="${warehouse.phone}"></td>
-                    <td th:text="${warehouse.warehouseName}"></td>
-                    <td th:text="${warehouse.createTime}"></td>
-                    <td th:text="${warehouse.updateTime}"></td>
+                <tr th:each="stock : ${stockList}">
+                    <td th:text="${stock.id}"></td>
+                    <td th:text="${stock.id.product.id}"></td>
+                    <td th:text="${stock.id.product.name}"></td>
+                    <td th:text="${stock.id.warehouse.id}"></td>
+                    <td th:text="${stock.id.warehouse.warehouseName}"></td>
+                    <td th:text="${stock.createdEmployee.id}"></td>
+                    <td th:text="${stock.createdEmployee.lastName + stock.createdEmployee.firstName }"></td>
+                    <td th:text="${stock.updatedEmployee.id}"></td>
+                    <td th:text="${stock.updatedEmployee.lastName + stock.updatedEmployee.firstName }"></td>
+                    <td th:text="${stock.quantityInStock}"></td>
+                    <td th:text="${stock.createTime}"></td>
+                    <td th:text="${stock.updateTime}"></td>
                     <td>
-                        <a th:href="@{'/rawUI/admin/warehouses/editWarehouse/' + ${warehouse.id}}">Edit</a>
-                        <a th:href="@{'/rawUI/admin/warehouses/deleteWarehouse/' + ${warehouse.id}}">Delete</a>
+                        <a th:href="@{'/rawUI/manager/stocks/addQuantity/'+ ${stock.id.product.id} +'/'+${stock.id.warehouse.id}}">Add
+                            more quantity</a></td>
+                    <td>
+                        <a th:href="@{'/rawUI/manager/stocks/editStock/'+ ${stock.id.product.id} +'/'+${stock.id.warehouse.id}}">Edit</a>
+                        <a th:href="@{'/rawUI/manager/stocks/deleteStock/'+ ${stock.id.product.id} +'/'+${stock.id.warehouse.id}}">Delete</a>
                     </td>
                 </tr>
                 </tbody>
@@ -122,26 +161,26 @@
         <br/>
         <br/>
         <a th:if="${currentPage > 1}"
-           th:href="@{'/rawUI/admin/warehouses/1'+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">First</a>
+           th:href="@{'/rawUI/manager/stocks/1'+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">First</a>
         <span th:if="${currentPage < 2}">First</span>
 
         <a th:if="${currentPage > 1}"
-           th:href="@{'/rawUI/admin/warehouses/'+${currentPage - 1} +'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Previous</a>
+           th:href="@{'/rawUI/manager/stocks/'+${currentPage - 1} +'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Previous</a>
         <span th:if="${currentPage < 2}">Previous</span>
 
         <span th:if="${totalPages > 0}">
         <span th:each="i : ${#numbers.sequence(1,totalPages)}">
             <a th:if="${currentPage != i}"
-               th:href="@{'/rawUI/admin/warehouses/'+${i}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">[[${i}]]</a>
+               th:href="@{'/rawUI/manager/stocks/'+${i}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">[[${i}]]</a>
             <span th:if="${currentPage == i}">[[${i}]]</span>
         </span>
         </span>
         <a th:if="${currentPage < totalPages}"
-           th:href="@{'/rawUI/admin/warehouses/'+${currentPage+1}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Next</a>
+           th:href="@{'/rawUI/manager/stocks/'+${currentPage+1}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Next</a>
         <span th:if="${currentPage >= totalPages}">Next</span>
 
         <a th:if="${currentPage < totalPages}"
-           th:href="@{'/rawUI/admin/warehouses/'+${totalPages}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Last</a>
+           th:href="@{'/rawUI/manager/stocks/'+${totalPages}+'?sortField='+${sortField} +'&sortDir='+${sortDir}+'&itemsNumber='+${numberElement}}">Last</a>
         <span th:if="${currentPage >= totalPages}">Last</span>
     </div>
 </div>
@@ -164,12 +203,12 @@
     }
     document.getElementById('btnClear').addEventListener('click', function (evt) {
         evt.preventDefault();
-        window.location.href = "/rawUI/admin/warehouses/1";
+        window.location.href = "/rawUI/manager/stocks/1";
     });
 
     function updateUrl(select) {
         let selectedValue = select.value;
-        window.location.href = "/rawUI/admin/warehouses/1?itemsNumber=" + selectedValue;
+        window.location.href = "/rawUI/manager/stocks/1?itemsNumber=" + selectedValue;
     }
 </script>
 

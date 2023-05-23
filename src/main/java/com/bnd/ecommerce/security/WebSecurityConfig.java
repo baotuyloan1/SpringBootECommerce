@@ -47,6 +47,8 @@ public class WebSecurityConfig {
         //         .hasAnyRole("ADMIN")  // only allow users with the "ROLE_ADMIN" authority
         .hasAnyAuthority("ADMIN") // only allow users with the "ADMIN" or "MANAGER"
         // authority
+        .antMatchers("/rawUI/manager/**")
+        .hasAnyAuthority("ADMIN", "MANAGER")
         .antMatchers("/rawUI/")
         .permitAll()
         .antMatchers("/rawUI/**")

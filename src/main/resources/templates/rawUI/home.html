@@ -97,9 +97,9 @@
     <div>
         <h3>List Stocks</h3>
         <div>
-            <a href="/rawUI/admin/stocks/newStock">Add new Stock</a>
+            <a href="/rawUI/manager/stocks/newStock">Add new Stock</a>
             &nbsp;
-            <a href="/rawUI/admin/stocks/1">View More</a>
+            <a href="/rawUI/manager/stocks/1">View More</a>
         </div>
         <br/>
         <br/>
@@ -108,7 +108,7 @@
             <tr>
                 <th>
 
-                        Stock ID
+                    Stock ID
                 </th>
                 <th>
                     Product Id
@@ -118,32 +118,38 @@
                     Warehouse Id
                 </th>
                 <th>
-                    <a>Warehouse Id</a>
+                    <a>Warehouse Name</a>
                 </th>
+                <td>Employee ID created</td>
+                <td>Employee Name created</td>
+                <td>Employee ID updated</td>
+                <td>Employee Name updated</td>
                 <th>Quantity In Stock</th>
-                <th>Created By</th>
-                <th>Enabled</th>
                 <th>Action</th>
             </tr>
             </thead>
 
-            <div th:if="${not #lists.isEmpty(s)}">
+            <div th:if="${not #lists.isEmpty(stockList)}">
                 <tbody>
-                <tr th:each="employee : ${listEmployees}">
-                    <td th:text="${employee.id}">Category ID</td>
-                    <td th:text="${employee.email}">Email</td>
-                    <td th:text="${employee.firstName}">First Name</td>
-                    <td th:text="${employee.lastName}">Last Name</td>
-                    <td th:text="${employee.phone}">Phone</td>
-                    <td th:text="${employee.roles}">Roles</td>
-                    <td th:text="${employee.enabled}">Enabled</td>
-                    <td th:if="${currentRoles.contains('ADMIN')}">
-                        <a th:href="@{'/rawUI/admin/editEmployee/' + ${employee.id}}">Edit</a>
-                        <a th:href="@{'/rawUI/admin/deleteEmployee/' + ${employee.id}}">Delete</a>
+                <tr th:each="stock : ${stockList}">
+                    <td th:text="${stock.id}"></td>
+                    <td th:text="${stock.id.product.id}"></td>
+                    <td th:text="${stock.id.product.name}"></td>
+                    <td th:text="${stock.id.warehouse.id}"></td>
+                    <td th:text="${stock.id.warehouse.warehouseName}"></td>
+                    <td th:text="${stock.createdEmployee.id}"></td>
+                    <td th:text="${stock.createdEmployee.lastName + stock.createdEmployee.firstName  }"></td>
+                    <td th:text="${stock.updatedEmployee.id }"></td>
+                    <td th:text="${stock.updatedEmployee.lastName + stock.updatedEmployee.firstName  }"></td>
+                    <td th:text="${stock.quantityInStock }"></td>
+
+                    <td th:if="${currentRoles.contains('ADMIN') or currentRoles.contains('MANAGER')}">
+                        <a th:href="@{'/rawUI/manager/stocks/editStock/' + ${stock.id.product.id} +'/'+${stock.id.warehouse.id}}">Edit</a>
+                        <a th:href="@{'/rawUI/manager/stocks/deleteStock/' + ${stock.id.product.id} +'/'+${stock.id.warehouse.id}}">Delete</a>
                     </td>
 
-                    <td th:if="${not currentRoles.contains('ADMIN')}">
-                        <p>Only ADMIN can action</p>
+                    <td th:if="${not currentRoles.contains('ADMIN') && not currentRoles.contains('MANAGER')}">
+                        <p>Only ADMIN OR Manager can action</p>
                     </td>
                 </tr>
                 </tbody>
@@ -166,7 +172,7 @@
             <tr>
                 <th>
                     <a>
-                         ID</a>
+                        ID</a>
                 </th>
                 <th>
                     <a>Address</a>
@@ -190,9 +196,10 @@
                     <td th:text="${warehouse.warehouseName}"></td>
                     <td th:text="${warehouse.createTime}"></td>
                     <td th:text="${warehouse.updateTime}"></td>
+
                     <td th:if="${currentRoles.contains('ADMIN')}">
-                        <a th:href="@{'/rawUI/admin/editWarehouse/' + ${warehouse.id}}">Edit</a>
-                        <a th:href="@{'/rawUI/admin/deleteWarehouse/' + ${warehouse.id}}">Delete</a>
+                        <a th:href="@{'/rawUI/admin/warehouses/editWarehouse/' + ${warehouse.id}}">Edit</a>
+                        <a th:href="@{'/rawUI/admin/warehouses/deleteWarehouse/' + ${warehouse.id}}">Delete</a>
                     </td>
 
                     <td th:if="${not currentRoles.contains('ADMIN')}">
@@ -340,11 +347,11 @@
     <br/>
     <div>
         <h1>Product List</h1>
-        <a href="/rawUI/warehouses/1">View More</a>
+        <a href="/rawUI/products/1">View More</a>
     </div>
-    <a href="/rawUI/warehouses/newPhone">Create New Phone</a>
-    <a href="/rawUI/warehouses/newTablet">Create New Tablet</a>
-    <a href="/rawUI/warehouses/newLaptop">Create New Phone</a>
+    <a href="/rawUI/products/newPhone">Create New Phone</a>
+    <a href="/rawUI/products/newTablet">Create New Tablet</a>
+    <a href="/rawUI/products/newLaptop">Create New Phone</a>
     <br/>
     <table>
         <thead>
@@ -373,8 +380,8 @@
                 <td th:text="${product.description}">Description</td>
                 <td th:text="${product.price}">Price</td>
                 <td>
-                    <a th:href="@{'/edit/' + ${product.id}}">Edit</a>
-                    <a th:href="@{'/delete/' + ${product.id}}">Delete</a>
+                    <a th:href="@{'/rawUI/products/editProduct/' + ${product.id}}">Edit</a>
+                    <a th:href="@{'/rawUI/products/deleteProduct/' + ${product.id}}">Delete</a>
                 </td>
             </tr>
             </tbody>

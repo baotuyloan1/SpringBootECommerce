@@ -1,48 +1,38 @@
 package com.bnd.ecommerce.dto;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
+import javax.validation.constraints.Min;
 
 public class StockDto extends CreateUpdateTimeStamp {
 
-  private long stockId;
+  private long productId;
 
-  private ProductDto productDto;
+  private int warehouseId;
 
-  private WarehouseDto warehouseDto;
+  @Min(value = 1)
+  private long quantityInStock;
 
-  private int quantityInStock;
-
-  private boolean status;
-
-  public long getStockId() {
-    return stockId;
+  public long getProductId() {
+    return productId;
   }
 
-  public void setStockId(long stockId) {
-    this.stockId = stockId;
+  public void setProductId(long productId) {
+    this.productId = productId;
   }
 
-  public ProductDto getProductDto() {
-    return productDto;
+  public int getWarehouseId() {
+    return warehouseId;
   }
 
-  public void setProductDto(ProductDto productDto) {
-    this.productDto = productDto;
+  public void setWarehouseId(int warehouseId) {
+    this.warehouseId = warehouseId;
   }
 
-  public WarehouseDto getWarehouseDto() {
-    return warehouseDto;
-  }
-
-  public void setWarehouseDto(WarehouseDto warehouseDto) {
-    this.warehouseDto = warehouseDto;
-  }
-
-  public int getQuantityInStock() {
+  public long getQuantityInStock() {
     return quantityInStock;
   }
 
-  public void setQuantityInStock(int quantityInStock) {
+  public void setQuantityInStock(long quantityInStock) {
     this.quantityInStock = quantityInStock;
   }
 }

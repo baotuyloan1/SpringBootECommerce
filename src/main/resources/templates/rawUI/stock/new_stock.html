@@ -1,34 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style>
+    .error {
+        color: red;
+        font-style: italic;
+    }
+</style>
 <body>
 <div align="center">
-    <h1>Create New Warehouse</h1>
+    <h1>Create New Stock</h1>
     <form th:action="@{'/rawUI/manager/stocks/saveStock'}" th:object="${stockDto}" method="post">
         <table th:border="0" th:cellpadding="10">
+
+            <td class="error" th:if="${existedMessage}" th:text="${existedMessage}"></td>
             <tr>
-                <td><label>Product Name:
-                    <input type="text" th:field="*{productDto.name}"/>
+                <td><label>Product:
+                    <select th:field="*{productId}">
+                        <option th:each="product : ${productList}" th:value="${product.id}"
+                                th:text="${product.id+' - '+product.name}"></option>
+
+                    </select>
                 </label></td>
             </tr>
 
             <tr>
-                <td><label>Product Id:
-                    <input type="text" th:field="*{productDto.id}"/>
+                <td><label>Warehouse:
+                    <select th:field="*{warehouseId}">
+                        <option th:each="warehouse : ${warehouseList}" th:value="${warehouse.id}"
+                                th:text="${warehouse.id+' - '+warehouse.warehouseName}"></option>
+
+                    </select>
                 </label></td>
             </tr>
+
             <tr>
-                <td><label>Warehouse Name:
-                    <input type="text" th:field="*{warehouseDto.warehouseName}"/>
-                </label></td>
-            </tr>
-            <tr>
-                <td><label>Warehouse Id:
-                    <input type="number" th:field="*{warehouseDto.id
-                    }"/>
+                <td><label>Quantity In Stock
+                    <input type="number" th:field="*{quantityInStock}"/>
                 </label></td>
             </tr>
             <tr>

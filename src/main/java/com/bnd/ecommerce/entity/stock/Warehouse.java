@@ -17,6 +17,8 @@ public class Warehouse extends CreateUpdateTimeStamp {
 
   private String phone;
 
+
+
   public int getId() {
     return id;
   }

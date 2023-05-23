@@ -8,71 +8,54 @@ import javax.persistence.*;
 @Entity
 @Table(name = "stock")
 public class Stock extends CreateUpdateTimeStamp {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long stockId;
+
+    @EmbeddedId
+    private StockID id;
+
+    public StockID getId() {
+        return id;
+    }
+
+    public void setId(StockID id) {
+        this.id = id;
+    }
+
+    private long quantityInStock;
+
+
 
   @ManyToOne
-  @JoinColumn(name = "product_id")
-  private Product product;
+  @JoinColumn(name = "created_employee_id")
+  private Employee createdEmployee;
+
 
   @ManyToOne
-  @JoinColumn(name = "warehouse_id")
-  private Warehouse warehouse;
+  @JoinColumn(name = "updated_employee_id")
+ private Employee updatedEmployee;
 
-  private int quantityInStock;
 
-  private boolean enable;
-
-  public boolean isEnable() {
-    return enable;
+  public Employee getCreatedEmployee() {
+    return createdEmployee;
   }
 
-  public void setEnable(boolean enable) {
-    this.enable = enable;
+  public void setCreatedEmployee(Employee createdEmployee) {
+    this.createdEmployee = createdEmployee;
   }
 
-  public Employee getEmployee() {
-    return employee;
+  public Employee getUpdatedEmployee() {
+    return updatedEmployee;
   }
 
-  public void setEmployee(Employee employee) {
-    this.employee = employee;
+  public void setUpdatedEmployee(Employee updatedEmployee) {
+    this.updatedEmployee = updatedEmployee;
   }
 
-  @ManyToOne
-  @JoinColumn(name = "employee_id")
-  private Employee employee;
 
-  public long getStockId() {
-    return stockId;
-  }
+    public long getQuantityInStock() {
+        return quantityInStock;
+    }
 
-  public void setStockId(long stockId) {
-    this.stockId = stockId;
-  }
-
-  public Product getProduct() {
-    return product;
-  }
-
-  public void setProduct(Product product) {
-    this.product = product;
-  }
-
-  public Warehouse getWarehouse() {
-    return warehouse;
-  }
-
-  public void setWarehouse(Warehouse warehouse) {
-    this.warehouse = warehouse;
-  }
-
-  public int getQuantityInStock() {
-    return quantityInStock;
-  }
-
-  public void setQuantityInStock(int quantityInStock) {
-    this.quantityInStock = quantityInStock;
-  }
+    public void setQuantityInStock(long quantityInStock) {
+        this.quantityInStock = quantityInStock;
+    }
 }

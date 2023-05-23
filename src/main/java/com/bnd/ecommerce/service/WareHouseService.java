@@ -4,6 +4,8 @@ import com.bnd.ecommerce.dto.WarehouseDto;
 import com.bnd.ecommerce.entity.stock.Warehouse;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface WareHouseService {
 
     Warehouse save(WarehouseDto warehouseDto);
@@ -13,4 +15,6 @@ public interface WareHouseService {
     WarehouseDto findWarehouseDtoById(int id);
 
     boolean deleteById(int id);
+
+    List<Warehouse> warehouseList();
 }

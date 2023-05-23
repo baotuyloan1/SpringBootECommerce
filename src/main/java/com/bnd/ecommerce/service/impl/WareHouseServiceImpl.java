@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,5 +61,10 @@ public class WareHouseServiceImpl implements WareHouseService {
   public boolean deleteById(int id) {
     wareHouseRepository.deleteById(id);
     return !wareHouseRepository.existsById(id);
+  }
+
+  @Override
+  public List<Warehouse> warehouseList() {
+    return wareHouseRepository.findAll();
   }
 }

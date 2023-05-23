@@ -29,8 +29,6 @@ public class ProductDto extends CreateUpdateTimeStamp {
   private BrandDto brandDto;
   private CategoryDto categoryDto;
 
-  private boolean status;
-
   public Set<StockDto> stockDtoSetSet = new HashSet<>();
 
   public Set<StockDto> getStockDtoSetSet() {

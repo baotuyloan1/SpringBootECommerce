@@ -29,8 +29,6 @@ public class Product extends CreateUpdateTimeStamp {
 
   @ManyToOne private Brand brand;
 
-  private boolean status;
-
   public Brand getBrand() {
     return brand;
   }
@@ -50,7 +48,8 @@ public class Product extends CreateUpdateTimeStamp {
 
   @OneToOne public Tablet tablet;
 
-  @OneToMany public Set<Stock> stockSet = new HashSet<>();
+  @OneToMany
+  public Set<Stock> stockSet = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(
@@ -112,7 +111,7 @@ public class Product extends CreateUpdateTimeStamp {
     this.phone = phone;
   }
 
-  @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private Set<ImageDetail> imageDetailSet;
 
   public long getId() {

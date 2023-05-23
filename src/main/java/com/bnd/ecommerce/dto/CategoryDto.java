@@ -2,7 +2,6 @@ package com.bnd.ecommerce.dto;
 
 import com.bnd.ecommerce.entity.Category;
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
-
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
@@ -11,68 +10,69 @@ import org.hibernate.validator.constraints.Length;
 
 public class CategoryDto extends CreateUpdateTimeStamp {
 
-    private int id;
+  private int id;
 
-    @NotBlank(message = "Category cannot be blank")
-    @Length(min = 5, max = 200, message = "Product name must be between 5-512 characters")
-    private String name;
+  @NotBlank(message = "Category cannot be blank")
+  @Length(min = 5, max = 200, message = "Product name must be between 5-512 characters")
+  private String name;
 
-    private String description;
+  private String description;
 
-    private Category parentCategory;
+  private Category parentCategory;
 
-    private Set<Category> children;
+  private Set<Category> children;
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Category getParentCategory() {
-        return parentCategory;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setParentCategory(Category parentCategory) {
-        this.parentCategory = parentCategory;
-    }
+  public Category getParentCategory() {
+    return parentCategory;
+  }
 
-    public Set<Category> getChildren() {
-        return children;
-    }
+  public void setParentCategory(Category parentCategory) {
+    this.parentCategory = parentCategory;
+  }
 
-    public void setChildren(Set<Category> children) {
-        this.children = children;
-    }
+  public Set<Category> getChildren() {
+    return children;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CategoryDto that = (CategoryDto) o;
-        return id == that.id;
-    }
+  public void setChildren(Set<Category> children) {
+    this.children = children;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    CategoryDto that = (CategoryDto) o;
+    return id == that.id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }
