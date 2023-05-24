@@ -50,6 +50,9 @@ public class StockServiceImpl implements StockService {
             sortDir.equals("asc")
                 ? Sort.by(sortField).ascending()
                 : Sort.by(sortField).descending());
+    if (keyword != null && !keyword.trim().equals("")) {
+      return stockRepository.searchAllBy(keyword, pageable);
+    }
     return stockRepository.findAll(pageable);
   }
 
@@ -80,17 +83,21 @@ public class StockServiceImpl implements StockService {
   }
 
   @Override
+  @Transactional
   public Stock create(StockDto stockDto, Authentication authentication) {
     StockID id = getStockID(stockDto.getProductId(), stockDto.getWarehouseId());
-
     Stock stock = mapStructMapper.stockDtoToStock(stockDto);
     stock.setId(id);
     Employee employee = employeeService.findByEmail(authentication.getName());
-
     stock.setUpdatedEmployee(employee);
-
     stock.setCreatedEmployee(employee);
-    return stockRepository.save(stock);
+    if (isExisted(id)) {
+      stockRepository.addQuantity(
+          id, stockDto.getQuantityInStock(), new Timestamp(new Date().getTime()), employee.getId());
+      return stockRepository.findById(id).orElseThrow();
+    } else {
+      return stockRepository.save(stock);
+    }
   }
 
   @Override
@@ -119,6 +126,11 @@ public class StockServiceImpl implements StockService {
   @Override
   public boolean isExisted(long productId, int warehouseId) {
     return stockRepository.existsById(getStockID(productId, warehouseId));
+  }
+
+  @Override
+  public boolean isExisted(StockID stockID) {
+    return stockRepository.existsById(stockID);
   }
 
   @Override

@@ -4,6 +4,7 @@ import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.entity.Product;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 
 @Entity
 public class Laptop extends CreateUpdateTimeStamp {
@@ -30,7 +31,9 @@ public class Laptop extends CreateUpdateTimeStamp {
 
     private String sizeWeight;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @Valid
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     public int getReleaseYear() {

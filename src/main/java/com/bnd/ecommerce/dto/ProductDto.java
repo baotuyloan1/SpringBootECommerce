@@ -7,14 +7,18 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import com.bnd.ecommerce.validator.product.UniqueProductName;
 import org.hibernate.validator.constraints.Length;
 
 public class ProductDto extends CreateUpdateTimeStamp {
   private long id;
 
-  @Column(nullable = false, unique = true, length = 512)
+  @Column(nullable = false, length = 512)
   @NotBlank(message = "Product name cannot blank")
   @Length(min = 5, max = 512, message = "Product name must be between 5-512 characters")
+  @UniqueProductName(message = "Product name is existed in the Database")
   private String name;
 
   private String description;
@@ -52,6 +56,7 @@ public class ProductDto extends CreateUpdateTimeStamp {
     return "/phone-photos/" + id + "/" + image;
   }
 
+  @NotNull(message = "Please choose category")
   public CategoryDto getCategoryDto() {
     return categoryDto;
   }

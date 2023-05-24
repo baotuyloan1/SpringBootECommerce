@@ -1,9 +1,13 @@
 package com.bnd.ecommerce.controller.raw;
 
+import com.bnd.ecommerce.dto.CategoryDto;
 import com.bnd.ecommerce.entity.Category;
 import com.bnd.ecommerce.exception.DeleteFailException;
 import com.bnd.ecommerce.exception.UpdateFailException;
+import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.service.CategoryService;
+
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -18,8 +22,11 @@ public class CategoryController {
   private static final String REDIRECT_CATEGORIES = "redirect:/rawUI/categories/";
   private final CategoryService categoryService;
 
-  public CategoryController(CategoryService categoryService) {
+  private final MapStructMapper mapStructMapper;
+
+  public CategoryController(CategoryService categoryService, MapStructMapper mapStructMapper) {
     this.categoryService = categoryService;
+    this.mapStructMapper = mapStructMapper;
   }
 
   @GetMapping("/")
@@ -39,11 +46,17 @@ public class CategoryController {
   @GetMapping("/createCategory")
   public String showCreateCategory(Model model) {
     Category category = new Category();
-    List<Category> categories = categoryService.listCategories();
+    List<CategoryDto> categoryDtoList = new ArrayList<>();
+    List<Category> rootCategoryList = categoryService.getRootCategoryList();
+    for (Category item : rootCategoryList) {
+      categoryService.getLevelCategory(item, 0, categoryDtoList);
+    }
     model.addAttribute("category", category);
-    model.addAttribute("categories", categories);
+    model.addAttribute("categoryDtoList", categoryDtoList);
     return "rawUI/category/new_category";
   }
+
+
 
   @PostMapping("/saveCategory")
   public String saveCategory(@Valid @ModelAttribute("category") Category category) {

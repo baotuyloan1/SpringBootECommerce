@@ -54,4 +54,9 @@ public interface MapStructMapper {
   Warehouse wareHouseDtoToWareHouse(WarehouseDto warehouseDto);
 
   WarehouseDto wareHouseToWareHouseDto(Warehouse warehouse);
+  @Mapping(source = "product", target = "productDto")
+  LaptopDto laptopToLaptopDto(Laptop laptop);
+
+  @Mapping(source = "productDto", target = "product")
+  Laptop laptopDtoToLaptop(LaptopDto laptopDto);
 }

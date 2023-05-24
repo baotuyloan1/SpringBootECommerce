@@ -7,6 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+
+import com.bnd.ecommerce.validator.email.UniqueEmail;
+import com.bnd.ecommerce.validator.product.UniqueProductName;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
@@ -16,9 +19,10 @@ public class Product extends CreateUpdateTimeStamp {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column(nullable = false, unique = true, length = 512)
+  @Column(nullable = false, length = 512)
   @NotBlank(message = "Product name cannot blank")
   @Length(min = 5, max = 512, message = "Product name must be between 5-512 characters")
+  @UniqueProductName (message = "Exist product in database")
   private String name;
 
   private String description;
@@ -43,13 +47,12 @@ public class Product extends CreateUpdateTimeStamp {
   @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   public Phone phone;
 
-  @OneToOne(fetch = FetchType.EAGER)
+  @OneToOne(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL)
   public Laptop laptop;
 
   @OneToOne public Tablet tablet;
 
-  @OneToMany
-  public Set<Stock> stockSet = new HashSet<>();
+  @OneToMany public Set<Stock> stockSet = new HashSet<>();
 
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(

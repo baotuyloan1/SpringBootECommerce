@@ -1,6 +1,7 @@
 package com.bnd.ecommerce.dto;
 
-import com.bnd.ecommerce.entity.Product;
+
+import javax.validation.Valid;
 
 public class LaptopDto {
   private int id;
@@ -24,6 +25,7 @@ public class LaptopDto {
 
   private String sizeWeight;
 
+  @Valid
   private ProductDto productDto;
 
     public int getId() {

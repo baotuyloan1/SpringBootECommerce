@@ -1,17 +1,19 @@
 package com.bnd.ecommerce.service.impl;
 
 import com.bnd.ecommerce.dto.ImageDetailDto;
+import com.bnd.ecommerce.dto.LaptopDto;
 import com.bnd.ecommerce.dto.PhoneDto;
 import com.bnd.ecommerce.entity.Category;
 import com.bnd.ecommerce.entity.Product;
 import com.bnd.ecommerce.mapper.MapStructMapper;
+import com.bnd.ecommerce.repository.PhoneRepository;
 import com.bnd.ecommerce.repository.ProductRepository;
+import com.bnd.ecommerce.service.CategoryService;
 import com.bnd.ecommerce.service.ProductService;
 import com.bnd.ecommerce.util.FileUtil;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import javax.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +27,16 @@ public class ProductServiceImpl implements ProductService {
 
   private final MapStructMapper mapStructMapper;
 
-  public ProductServiceImpl(ProductRepository productRepository, MapStructMapper mapStructMapper) {
+  private final CategoryService categoryService;
+
+  public ProductServiceImpl(
+      ProductRepository productRepository,
+      MapStructMapper mapStructMapper,
+      PhoneRepository phoneRepository,
+      CategoryService categoryService1) {
     this.productRepository = productRepository;
     this.mapStructMapper = mapStructMapper;
+    this.categoryService = categoryService1;
   }
 
   @Override
@@ -82,9 +91,22 @@ public class ProductServiceImpl implements ProductService {
                     getMainCategory(foundProduct.getCategories())));
         Set<ImageDetailDto> imageDetailDtoSet = phoneDto.getProductDto().getImageDetailDtoSet();
         for (ImageDetailDto imageDetailDto : imageDetailDtoSet) {
-            imageDetailDto.setProductDtoId(id);
+          imageDetailDto.setProductDtoId(id);
         }
         return phoneDto;
+      }
+      if (foundProduct.getLaptop() != null) {
+        LaptopDto laptopDto = mapStructMapper.laptopToLaptopDto(foundProduct.getLaptop());
+        laptopDto
+            .getProductDto()
+            .setCategoryDto(
+                mapStructMapper.categoryToCategoryDto(
+                    getMainCategory(foundProduct.getCategories())));
+        Set<ImageDetailDto> imageDetailDtoSet = laptopDto.getProductDto().getImageDetailDtoSet();
+        for (ImageDetailDto imageDetailDto : imageDetailDtoSet) {
+          imageDetailDto.setProductDtoId(id);
+        }
+        return laptopDto;
       }
     }
     return null;
@@ -106,5 +128,20 @@ public class ProductServiceImpl implements ProductService {
       }
     }
     return null;
+  }
+
+  @Override
+  public Category findRootCategory(Category category, Set<Category> categories) {
+    Category currentCategory = categoryService.findById(category.getId());
+    categories.add(currentCategory);
+    Category parentCategory = (Category) Hibernate.unproxy(currentCategory.getParentCategory());
+    if (parentCategory != null) {
+      return findRootCategory(parentCategory, categories);
+    } else return category;
+  }
+
+  @Override
+  public Product findByName(String name) {
+    return productRepository.findByName(name);
   }
 }

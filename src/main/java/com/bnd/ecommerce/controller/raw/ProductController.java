@@ -1,14 +1,15 @@
 package com.bnd.ecommerce.controller.raw;
 
 import com.bnd.ecommerce.dto.*;
+import com.bnd.ecommerce.entity.Category;
 import com.bnd.ecommerce.entity.Laptop;
 import com.bnd.ecommerce.entity.Phone;
 import com.bnd.ecommerce.entity.Product;
 import com.bnd.ecommerce.exception.CreateFailException;
 import com.bnd.ecommerce.exception.DeleteFailException;
 import com.bnd.ecommerce.service.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,8 @@ public class ProductController {
   private final CategoryService categoryService;
 
   private static final String REDIRECT_PRODUCTS = "redirect:/rawUI/products/1";
-  private static final String VIEW_NEW = "rawUI/product/new_phone";
+  private static final String VIEW_NEW_PHONE = "rawUI/product/new_phone";
+  private static final String VIEW_NEW_LAPTOP = "rawUI/product/new_laptop";
 
   public ProductController(
       ProductService productService,
@@ -78,14 +80,18 @@ public class ProductController {
     productDto.setPhoneDto(phoneDto);
     loadData(model);
     model.addAttribute("phoneDto", phoneDto);
-    return VIEW_NEW;
+    return VIEW_NEW_PHONE;
   }
 
   private void loadData(Model model) {
     List<BrandDto> brandDtoList = brandService.brandDtoList();
-    Set<CategoryDto> categoryDtoSet = categoryService.categoryDtoSet();
+    List<CategoryDto> categoryDtoList = new ArrayList<>();
+    List<Category> rootCategoryList = categoryService.getRootCategoryList();
+    for (Category item : rootCategoryList) {
+      categoryService.getLevelCategory(item, 0, categoryDtoList);
+    }
     model.addAttribute("brandDtoList", brandDtoList);
-    model.addAttribute("categoryDtoSet", categoryDtoSet);
+    model.addAttribute("categoryDtoList", categoryDtoList);
   }
 
   @PostMapping("/createPhone")
@@ -101,7 +107,7 @@ public class ProductController {
         model.addAttribute("imageEmptyError", "Image can't empty");
         model.addAttribute("imageIsEmpty", true);
       }
-      return VIEW_NEW;
+      return VIEW_NEW_PHONE;
     }
     Phone savedPhone;
     if (!mainImage.isEmpty()) {
@@ -109,7 +115,7 @@ public class ProductController {
       if (savedPhone != null) return REDIRECT_PRODUCTS;
       else throw new CreateFailException("Create phone fail");
     }
-    return VIEW_NEW;
+    return VIEW_NEW_PHONE;
   }
 
   @GetMapping("/editProduct/{id}")
@@ -119,6 +125,9 @@ public class ProductController {
     if (object instanceof PhoneDto phoneDto) {
       model.addAttribute("phoneDto", phoneDto);
       return "rawUI/product/edit_phone";
+    } else if (object instanceof LaptopDto laptopDto) {
+      model.addAttribute("laptopDto", laptopDto);
+      return "rawUI/product/edit_laptop";
     } else {
       return null;
     }
@@ -147,21 +156,37 @@ public class ProductController {
 
   @GetMapping("/newLaptop")
   public String showNewLaptop(Model model) {
+    BrandDto brandDto = new BrandDto();
+    ProductDto productDto = new ProductDto();
     LaptopDto laptopDto = new LaptopDto();
+    productDto.setBrandDto(brandDto);
+    laptopDto.setProductDto(productDto);
     loadData(model);
     model.addAttribute("laptopDto", laptopDto);
-    return "rawUI/product/new_laptop";
+    return VIEW_NEW_LAPTOP;
   }
 
-  @PostMapping("/saveLaptop")
-  public String saveLaptop(@Valid @ModelAttribute("laptopDto") LaptopDto laptopDto,
-                           BindingResult bindingResult,
-                           @RequestParam("imageProduct")MultipartFile imageProduct,
-                           @RequestParam("imageDetailArray")MultipartFile[] imageDetailArray) {
-    Laptop savedLaptop = laptopService.createLaptop(laptopDto);
-    if (savedLaptop != null){
-      return REDIRECT_PRODUCTS;
+  @PostMapping("/createLaptop")
+  public String saveLaptop(
+      @Valid @ModelAttribute("laptopDto") LaptopDto laptopDto,
+      BindingResult bindingResult,
+      @RequestParam("imageProduct") MultipartFile mainImage,
+      @RequestParam("imagesDetail") MultipartFile[] imagesDetail,
+      Model model) {
+    if (bindingResult.hasErrors() || mainImage.isEmpty()) {
+      loadData(model);
+      if (mainImage.isEmpty()) {
+        model.addAttribute("imageEmptyError", "Image can't empty");
+        model.addAttribute("imageIsEmpty", true);
+      }
+      return VIEW_NEW_LAPTOP;
     }
-    return "rawUI/product/new_laptop";
+    Laptop savedLaptop;
+    if (!mainImage.isEmpty()) {
+      savedLaptop = laptopService.create(laptopDto, mainImage, imagesDetail);
+      if (savedLaptop != null) return REDIRECT_PRODUCTS;
+      else throw new CreateFailException("Create laptop fail");
+    }
+    return REDIRECT_PRODUCTS;
   }
 }

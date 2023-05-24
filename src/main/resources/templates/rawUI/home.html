@@ -255,7 +255,7 @@
     </div>
     <h1>Category List</h1>
     <div>
-        <a href="/rawUI/categories/create">Create New Category</a>
+        <a href="/rawUI/categories/createCategory">Create New Category</a>
         &nbsp;
         <a href="/rawUI/categories/">View More</a>
     </div>
@@ -351,7 +351,7 @@
     </div>
     <a href="/rawUI/products/newPhone">Create New Phone</a>
     <a href="/rawUI/products/newTablet">Create New Tablet</a>
-    <a href="/rawUI/products/newLaptop">Create New Phone</a>
+    <a href="/rawUI/products/newLaptop">Create New Laptop</a>
     <br/>
     <table>
         <thead>
@@ -430,8 +430,8 @@
                 <td th:text="${laptop.graphicsCard}">Graphics Card</td>
                 <td th:text="${laptop.operatingSystem}">Operating System</td>
                 <td>
-                    <a th:href="@{'/edit/' + ${product.id}}">Edit</a>
-                    <a th:href="@{'/delete/' + ${product.id}}">Delete</a>
+                    <a th:href="@{'/edit/' + ${laptop.id}}">Edit</a>
+                    <a th:href="@{'/delete/' + ${laptop.id}}">Delete</a>
                 </td>
             </tr>
             </tbody>

@@ -19,7 +19,6 @@
     <form th:action="@{'/rawUI/manager/stocks/saveStock'}" th:object="${stockDto}" method="post">
         <table th:border="0" th:cellpadding="10">
 
-            <td class="error" th:if="${existedMessage}" th:text="${existedMessage}"></td>
             <tr>
                 <td><label>Product:
                     <select th:field="*{productId}">
@@ -44,10 +43,11 @@
                 <td><label>Quantity In Stock
                     <input type="number" th:field="*{quantityInStock}"/>
                 </label></td>
+                <td class="error" th:if="${#fields.hasErrors('quantityInStock')}" th:errors="*{quantityInStock}"></td>
             </tr>
             <tr>
                 <td>
-                    <button type="submit">Save Warehouse</button>
+                    <button type="submit">Save Stock</button>
                 </td>
             </tr>
         </table>

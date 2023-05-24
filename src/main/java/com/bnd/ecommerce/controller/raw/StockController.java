@@ -56,9 +56,13 @@ public class StockController {
   @GetMapping("/newStock")
   public String showNewStock(Model model) {
     model.addAttribute("stockDto", new StockDto());
+    loadData(model);
+    return "rawUI/stock/new_stock";
+  }
+
+  private void loadData(Model model) {
     model.addAttribute("productList", productService.listProducts());
     model.addAttribute("warehouseList", wareHouseService.warehouseList());
-    return "rawUI/stock/new_stock";
   }
 
   @PostMapping("/saveStock")
@@ -67,13 +71,8 @@ public class StockController {
       BindingResult bindingResult,
       Authentication authentication,
       Model model) {
-    boolean isExisted = stockService.isExisted(stockDto.getProductId(), stockDto.getWarehouseId());
-    if (bindingResult.hasErrors() || isExisted) {
-      if (isExisted) {
-        model.addAttribute("productList", productService.listProducts());
-        model.addAttribute("warehouseList", wareHouseService.warehouseList());
-        model.addAttribute("existedMessage", "These products were existed in this warehouse.");
-      }
+    if (bindingResult.hasErrors()) {
+      loadData(model);
       return "rawUI/stock/new_stock";
     }
     stockService.create(stockDto, authentication);
@@ -111,8 +110,7 @@ public class StockController {
     model.addAttribute("stockDto", stockDto);
     model.addAttribute("oldProductId", stockDto.getProductId());
     model.addAttribute("oldWarehouseId", stockDto.getWarehouseId());
-    model.addAttribute("productList", productService.listProducts());
-    model.addAttribute("warehouseList", wareHouseService.warehouseList());
+    loadData(model);
     return "rawUI/stock/edit_stock";
   }
 
@@ -129,8 +127,7 @@ public class StockController {
     if (stockService.isExisted(stockDto, oldStockDto)) {
       model.addAttribute("oldProductId", oldProductId);
       model.addAttribute("oldWarehouseId", oldWarehouseId);
-      model.addAttribute("productList", productService.listProducts());
-      model.addAttribute("warehouseList", wareHouseService.warehouseList());
+      loadData(model);
       model.addAttribute("existedMessage", "These products were existed in this warehouse");
       return "rawUI/stock/edit_stock";
     }

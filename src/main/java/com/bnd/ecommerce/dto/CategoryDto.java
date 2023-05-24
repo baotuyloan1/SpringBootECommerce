@@ -22,6 +22,16 @@ public class CategoryDto extends CreateUpdateTimeStamp {
 
   private Set<Category> children;
 
+  private int level;
+
+  public int getLevel() {
+    return level;
+  }
+
+
+  public void setLevel(int level) {
+    this.level = level;
+  }
 
   public int getId() {
     return id;

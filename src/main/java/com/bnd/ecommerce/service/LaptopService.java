@@ -2,14 +2,17 @@ package com.bnd.ecommerce.service;
 
 import com.bnd.ecommerce.dto.LaptopDto;
 import com.bnd.ecommerce.entity.Laptop;
-import org.springframework.data.domain.Page;
-
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface LaptopService {
 
-    Laptop createLaptop(LaptopDto laptopDto);
-    List<Laptop> listLaptops();
+  Laptop create(LaptopDto laptopDto, MultipartFile mainImage, MultipartFile[] imagesDetail);
 
-    Page<Laptop> listAll(int numPage, String sortField, String sortDir, int size);
+  List<Laptop> listLaptops();
+
+  Page<Laptop> listAll(int numPage, String sortField, String sortDir, int size);
+
+  Laptop update(LaptopDto laptopDto, MultipartFile multipartFile);
 }

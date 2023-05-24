@@ -9,6 +9,7 @@ import com.bnd.ecommerce.repository.PhoneRepository;
 import com.bnd.ecommerce.service.CategoryService;
 import com.bnd.ecommerce.service.ImageDetailService;
 import com.bnd.ecommerce.service.PhoneService;
+import com.bnd.ecommerce.service.ProductService;
 import com.bnd.ecommerce.util.FileUtil;
 import java.io.IOException;
 import java.util.HashSet;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.transaction.Transactional;
-import org.hibernate.Hibernate;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,8 @@ public class PhoneServiceImpl implements PhoneService {
   private final PhoneRepository phoneRepository;
 
   private final MapStructMapper mapStructMapper;
+
+  private final ProductService productService;
   private final CategoryService categoryService;
 
   private final ImageDetailService imageDetailService;
@@ -34,12 +37,13 @@ public class PhoneServiceImpl implements PhoneService {
   private static final String ROOT_DIR = "phone-photos/";
 
   public PhoneServiceImpl(
-      PhoneRepository phoneRepository,
-      MapStructMapper mapStructMapper,
-      CategoryService categoryService,
-      ImageDetailService imageDetailService) {
+          PhoneRepository phoneRepository,
+          MapStructMapper mapStructMapper,
+          ProductService productService, CategoryService categoryService,
+          ImageDetailService imageDetailService) {
     this.phoneRepository = phoneRepository;
     this.mapStructMapper = mapStructMapper;
+    this.productService = productService;
     this.categoryService = categoryService;
     this.imageDetailService = imageDetailService;
   }
@@ -54,7 +58,7 @@ public class PhoneServiceImpl implements PhoneService {
     Category category =
         mapStructMapper.categoryDtoToCategory(phoneDto.getProductDto().getCategoryDto());
     Set<Category> categories = new HashSet<>();
-    findRootCategory(category, categories);
+    productService.findRootCategory(category, categories);
     phone.getProduct().setCategories(categories);
     Phone savedPhone = phoneRepository.save(phone);
     String uploadDir = ROOT_DIR + savedPhone.getProduct().getId();
@@ -77,14 +81,7 @@ public class PhoneServiceImpl implements PhoneService {
     return savedPhone;
   }
 
-  public Category findRootCategory(Category category, Set<Category> categories) {
-    Category currentCategory = categoryService.findById(category.getId());
-    categories.add(currentCategory);
-    Category parentCategory = (Category) Hibernate.unproxy(currentCategory.getParentCategory());
-    if (parentCategory != null) {
-      return findRootCategory(parentCategory, categories);
-    } else return category;
-  }
+
 
   @Transactional
   @Override
@@ -106,7 +103,7 @@ public class PhoneServiceImpl implements PhoneService {
     Category category =
         mapStructMapper.categoryDtoToCategory(phoneDto.getProductDto().getCategoryDto());
     Set<Category> categories = new HashSet<>();
-    findRootCategory(category, categories);
+    productService.findRootCategory(category, categories);
     phone.getProduct().setCategories(categories);
     return phoneRepository.save(phone);
   }
@@ -118,7 +115,7 @@ public class PhoneServiceImpl implements PhoneService {
     Category category =
         mapStructMapper.categoryDtoToCategory(phoneDto.getProductDto().getCategoryDto());
     Set<Category> categories = new HashSet<>();
-    findRootCategory(category, categories);
+    productService.findRootCategory(category, categories);
     phone.getProduct().setCategories(categories);
     return phoneRepository.save(phone);
   }

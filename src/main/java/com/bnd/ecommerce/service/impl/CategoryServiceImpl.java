@@ -92,4 +92,15 @@ public class CategoryServiceImpl implements CategoryService {
   public List<Category> getRootCategoryList() {
     return categoryRepository.rootCategoryList();
   }
+
+  public void getLevelCategory(Category category, int level, List<CategoryDto> categoryDtoList) {
+    if (category != null) {
+      CategoryDto categoryDto = mapStructMapper.categoryToCategoryDto(category);
+      categoryDto.setLevel(level);
+      categoryDtoList.add(categoryDto);
+      for (Category chilCategory : category.getChildren()) {
+        getLevelCategory(chilCategory, level + 1, categoryDtoList);
+      }
+    }
+  }
 }
