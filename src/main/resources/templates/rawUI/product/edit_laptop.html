@@ -15,15 +15,22 @@
 <div align="center">
   <h1>Edit Laptop</h1>
   <br/>
-  <form th:action="@{'/rawUI/products/saveLaptop'}" th:object="${laptopDto}" method="post"
+  <form th:action="@{'/rawUI/products/updateLaptop'}" th:object="${laptopDto}" method="post"
         enctype="multipart/form-data">
     <table border="0" cellpadding="10">
+      <input type="hidden" th:field="*{productDto.image}"/>
+      <input type="hidden" th:field="*{productDto.id}"/>
+      <input type="hidden" th:field="*{productDto.createTime}"/>
       <tr>
         <td>Product Name:</td>
         <td><input type="text" th:field="*{productDto.name}"/></td>
         <td class="error" th:if="${#fields.hasErrors('productDto.name')}" th:errors="*{productDto.name}"></td>
       </tr>
 
+      <tr>
+        <td>Old Image:</td>
+        <td><img th:src="@{${laptopDto.photoImagePath}}"/></td>
+      </tr>
       <tr>
         <td>Main Image:</td>
         <td><input type="file" name="imageProduct" accept="image/png, image/jpeg"/></td>

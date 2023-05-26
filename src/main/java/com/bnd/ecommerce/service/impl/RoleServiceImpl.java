@@ -1,7 +1,7 @@
 package com.bnd.ecommerce.service.impl;
 
 import com.bnd.ecommerce.entity.Role;
-import com.bnd.ecommerce.exception.NotFoundException;
+import com.bnd.ecommerce.exception.ResourceNotFoundException;
 import com.bnd.ecommerce.repository.RoleRepository;
 import com.bnd.ecommerce.service.RoleService;
 import java.util.List;
@@ -31,7 +31,7 @@ public class RoleServiceImpl implements RoleService {
   public Role findById(int id) {
     Optional<Role> role = roleRepository.findById(id);
     if (role.isPresent()) return role.get();
-    else throw new NotFoundException("Role Not Found");
+    else throw new ResourceNotFoundException("Role Not Found");
   }
 
   @Override

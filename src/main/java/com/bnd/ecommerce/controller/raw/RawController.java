@@ -4,7 +4,7 @@ import com.bnd.ecommerce.entity.*;
 import com.bnd.ecommerce.entity.employee.Employee;
 import com.bnd.ecommerce.entity.stock.Stock;
 import com.bnd.ecommerce.entity.stock.Warehouse;
-import com.bnd.ecommerce.exception.NotFoundException;
+import com.bnd.ecommerce.exception.ResourceNotFoundException;
 import com.bnd.ecommerce.service.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,7 +154,7 @@ public class RawController {
       roleService.save(role);
       return REDIRECT_HOME;
     } else {
-      throw new NotFoundException("The role does not exist in the system");
+      throw new ResourceNotFoundException("The role does not exist in the system");
     }
   }
 

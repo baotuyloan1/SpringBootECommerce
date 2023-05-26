@@ -1,6 +1,8 @@
 package com.bnd.ecommerce.entity.stock;
 
 import com.bnd.ecommerce.entity.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;

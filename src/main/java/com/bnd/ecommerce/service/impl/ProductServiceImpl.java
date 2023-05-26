@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
   private ProductRepository productRepository;

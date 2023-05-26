@@ -2,65 +2,53 @@ package com.bnd.ecommerce.entity.order;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.entity.Product;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "order_detail")
 public class OrderDetail extends CreateUpdateTimeStamp {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+  @JsonIgnoreProperties(value = {"order"})
+  @EmbeddedId
+  private OrderProductPK pk;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+  public OrderDetail() {}
 
-    private int quantity;
+  public OrderProductPK getPk() {
+    return pk;
+  }
 
-    private float price;
+  public void setPk(OrderProductPK pk) {
+    this.pk = pk;
+  }
 
-    public long getId() {
-        return id;
-    }
+  private int quantity;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public OrderDetail(Order order, Product product, int quantity) {
+    pk = new OrderProductPK();
+    this.pk.setOrder(order);
+    this.pk.setProduct(product);
+    this.quantity = quantity;
+  }
 
-    public Order getOrder() {
-        return order;
-    }
+  public int getQuantity() {
+    return quantity;
+  }
 
-    public void setOrder(Order order) {
-        this.order = order;
-    }
+  public void setQuantity(int quantity) {
+    this.quantity = quantity;
+  }
 
-    public Product getProduct() {
-        return product;
-    }
+  @Transient
+  public Product getProduct() {
+    return this.pk.getProduct();
+  }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+  @Transient
+  public Float getTotalPrice() {
+    return this.pk.getProduct().getPrice() * quantity;
+  }
 
-    public int getQuantity() {
-        return quantity;
-    }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
 }

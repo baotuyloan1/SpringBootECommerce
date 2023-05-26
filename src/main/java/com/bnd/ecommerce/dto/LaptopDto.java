@@ -123,4 +123,9 @@ public class LaptopDto {
     public void setProductDto(ProductDto productDto) {
         this.productDto = productDto;
     }
+
+    public String getPhotoImagePath() {
+        if (productDto.getImage() == null || id == 0) return null;
+        return "/laptop-photos/" + productDto.getId() + "/" + productDto.getImage() ;
+    }
 }

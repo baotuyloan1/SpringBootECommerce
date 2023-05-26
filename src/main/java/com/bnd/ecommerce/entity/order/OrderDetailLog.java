@@ -14,9 +14,7 @@ public class OrderDetailLog extends CreateTimestamp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "order_detail_id")
-    private OrderDetail orderDetail;
+
 
     private String messageLog;
 
@@ -42,13 +40,6 @@ public class OrderDetailLog extends CreateTimestamp {
         this.id = id;
     }
 
-    public OrderDetail getOrderDetail() {
-        return orderDetail;
-    }
-
-    public void setOrderDetail(OrderDetail orderDetail) {
-        this.orderDetail = orderDetail;
-    }
 
     public String getMessageLog() {
         return messageLog;

@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.bnd.ecommerce.validator.product.UniqueProductName;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.Length;
 
 public class ProductDto extends CreateUpdateTimeStamp {
@@ -28,6 +29,8 @@ public class ProductDto extends CreateUpdateTimeStamp {
   private float price;
 
   private String image;
+
+  @JsonManagedReference
   private PhoneDto phoneDto;
 
   private BrandDto brandDto;
@@ -51,10 +54,7 @@ public class ProductDto extends CreateUpdateTimeStamp {
     this.image = image;
   }
 
-  public String getPhotoImagePath() {
-    if (image == null || id == 0) return null;
-    return "/phone-photos/" + id + "/" + image;
-  }
+
 
   @NotNull(message = "Please choose category")
   public CategoryDto getCategoryDto() {

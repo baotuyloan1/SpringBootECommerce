@@ -2,105 +2,85 @@ package com.bnd.ecommerce.entity.customer;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.entity.order.Order;
-
-import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "customer")
 public class Customer extends CreateUpdateTimeStamp {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
-    private String firstName;
+  @NotNull
+  @Column(nullable = false)
+  private String firstName;
 
-    private String lastName;
-    private String email;
-    private String phone;
-    private String address;
+  private String lastName;
+  private String email;
+  private String phone;
 
-    private Timestamp creatTime;
+  private String address;
 
-    private Timestamp updateTime;
+  public Set<Order> getOrders() {
+    return orders;
+  }
 
+  public void setOrders(Set<Order> orders) {
+    this.orders = orders;
+  }
 
+  @OneToMany(mappedBy = "customer")
+  public Set<Order> orders = new HashSet<>();
 
-    public Timestamp getUpdateTime() {
-        return updateTime;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public void setUpdateTime(Timestamp updateTime) {
-        this.updateTime = updateTime;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public Timestamp getCreatTime() {
-        return creatTime;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public void setCreatTime(Timestamp creatTime) {
-        this.creatTime = creatTime;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public Set<Order> getOrders() {
-        return orders;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-    @OneToMany(mappedBy = "customer")
-    public Set<Order> orders = new HashSet<>();
+  public String getEmail() {
+    return email;
+  }
 
-    public long getId() {
-        return id;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public String getFirstName() {
-        return firstName;
-    }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 }

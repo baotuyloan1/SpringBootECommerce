@@ -2,12 +2,15 @@ package com.bnd.ecommerce.dto;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import javax.validation.Valid;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.Length;
 
 public class PhoneDto  {
 
   private long productId;
 
+  @JsonBackReference
   @Valid private ProductDto productDto;
 
   private String screen;
@@ -118,5 +121,10 @@ public class PhoneDto  {
 
   public void setSim(String sim) {
     this.sim = sim;
+  }
+
+  public String getPhotoImagePath() {
+    if (productDto.getImage() == null || productDto.getId() == 0) return null;
+    return "/phone-photos/" + productDto.getId() + "/" + productDto.getImage() ;
   }
 }

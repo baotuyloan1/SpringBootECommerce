@@ -1,5 +1,7 @@
 package com.bnd.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -20,14 +22,13 @@ public class Category extends CreateUpdateTimeStamp {
 
   private String description;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "parent_id")
   private Category parentCategory;
 
   @OneToMany(mappedBy = "parentCategory", fetch = FetchType.EAGER)
   private Set<Category> children;
-
-
 
   public Category getParentCategory() {
     return parentCategory;
@@ -53,7 +54,9 @@ public class Category extends CreateUpdateTimeStamp {
     this.description = description;
   }
 
+  //  @JsonIgnore
   @ManyToMany(mappedBy = "categories")
+  @JsonBackReference
   private Set<Product> products;
 
   public int getId() {

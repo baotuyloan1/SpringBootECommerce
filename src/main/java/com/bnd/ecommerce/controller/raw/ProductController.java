@@ -189,4 +189,18 @@ public class ProductController {
     }
     return REDIRECT_PRODUCTS;
   }
+
+  @PostMapping("/updateLaptop")
+  public String updateLaptop(
+      @ModelAttribute("laptopDto") LaptopDto laptopDto,
+      Model model,
+      @RequestParam("imageProduct") MultipartFile multipartFile) {
+    Laptop savedLaptop = laptopService.update(laptopDto, multipartFile);
+    if (savedLaptop != null) {
+      return REDIRECT_PRODUCTS;
+    } else {
+      loadData(model);
+      return "rawUI/product/edit_laptop/" + laptopDto.getId();
+    }
+  }
 }

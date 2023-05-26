@@ -6,7 +6,7 @@ import com.bnd.ecommerce.entity.employee.Employee;
 import com.bnd.ecommerce.entity.stock.Stock;
 import com.bnd.ecommerce.entity.stock.StockID;
 import com.bnd.ecommerce.entity.stock.Warehouse;
-import com.bnd.ecommerce.exception.NotFoundException;
+import com.bnd.ecommerce.exception.ResourceNotFoundException;
 import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.repository.StockRepository;
 import com.bnd.ecommerce.service.EmployeeService;
@@ -64,7 +64,7 @@ public class StockServiceImpl implements StockService {
       stockDto.setProductId(productId);
       stockDto.setWarehouseId(warehouseId);
       return stockDto;
-    } else throw new NotFoundException("Stock not found");
+    } else throw new ResourceNotFoundException("Stock not found");
   }
 
   StockID getStockID(long productId, int warehouseId) {

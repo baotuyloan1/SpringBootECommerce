@@ -2,7 +2,7 @@ package com.bnd.ecommerce.service.impl;
 
 import com.bnd.ecommerce.dto.CategoryDto;
 import com.bnd.ecommerce.entity.Category;
-import com.bnd.ecommerce.exception.NotFoundException;
+import com.bnd.ecommerce.exception.ResourceNotFoundException;
 import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.repository.CategoryRepository;
 import com.bnd.ecommerce.service.CategoryService;
@@ -37,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
     if (category.isPresent()) {
       return category.get();
     } else {
-      throw new NotFoundException("Category not found");
+      throw new ResourceNotFoundException("Category not found");
     }
   }
 
@@ -80,7 +80,7 @@ public class CategoryServiceImpl implements CategoryService {
     if (category.isPresent()) {
       return mapStructMapper.categoryToCategoryDto(category.get());
     }
-    throw new NotFoundException("Category not found");
+    throw new ResourceNotFoundException("Category not found");
   }
 
   @Override

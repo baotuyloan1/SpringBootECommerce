@@ -1,2 +1,3 @@
-package com.bnd.ecommerce.supplier;public class ProductServiceHolder {
-}
+package com.bnd.ecommerce.supplier;
+
+public class ProductServiceHolder {}

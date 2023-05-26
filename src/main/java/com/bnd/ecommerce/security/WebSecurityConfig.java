@@ -42,6 +42,7 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain myFilterChain(HttpSecurity http) throws Exception {
+    http.csrf().disable();
     http.authorizeRequests()
         .antMatchers("/rawUI/admin/**")
         //         .hasAnyRole("ADMIN")  // only allow users with the "ROLE_ADMIN" authority
@@ -53,6 +54,8 @@ public class WebSecurityConfig {
         .permitAll()
         .antMatchers("/rawUI/**")
         .hasAnyAuthority("ADMIN", "MANAGER")
+        .antMatchers("/api/**")
+        .permitAll()
         .anyRequest()
         .authenticated()
         .and()

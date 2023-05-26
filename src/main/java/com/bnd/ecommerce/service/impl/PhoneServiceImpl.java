@@ -2,8 +2,8 @@ package com.bnd.ecommerce.service.impl;
 
 import com.bnd.ecommerce.dto.PhoneDto;
 import com.bnd.ecommerce.entity.Category;
-import com.bnd.ecommerce.entity.Phone;
 import com.bnd.ecommerce.entity.ImageDetail;
+import com.bnd.ecommerce.entity.Phone;
 import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.repository.PhoneRepository;
 import com.bnd.ecommerce.service.CategoryService;
@@ -17,7 +17,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.transaction.Transactional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,14 +36,14 @@ public class PhoneServiceImpl implements PhoneService {
 
   private final ImageDetailService imageDetailService;
 
-
   private static final String ROOT_DIR = "phone-photos/";
 
   public PhoneServiceImpl(
-          PhoneRepository phoneRepository,
-          MapStructMapper mapStructMapper,
-          ProductService productService, CategoryService categoryService,
-          ImageDetailService imageDetailService) {
+      PhoneRepository phoneRepository,
+      MapStructMapper mapStructMapper,
+      ProductService productService,
+      CategoryService categoryService,
+      ImageDetailService imageDetailService) {
     this.phoneRepository = phoneRepository;
     this.mapStructMapper = mapStructMapper;
     this.productService = productService;
@@ -65,15 +68,17 @@ public class PhoneServiceImpl implements PhoneService {
     try {
       FileUtil.saveFile(uploadDir, fileName, mainImage);
       for (MultipartFile imageDetail : imagesDetail) {
-        String fileNameDetail =
-            StringUtils.cleanPath(Objects.requireNonNull(imageDetail.getOriginalFilename()));
-        long size = FileUtil.saveFile(uploadDir, fileNameDetail, imageDetail);
-        ImageDetail productDetailImage = new ImageDetail();
-        productDetailImage.setDescription("Description of " + fileNameDetail);
-        productDetailImage.setProduct(savedPhone.getProduct());
-        productDetailImage.setName(fileNameDetail);
-        productDetailImage.setSize(size);
-        imageDetailService.save(productDetailImage);
+        if (!imageDetail.isEmpty()) {
+          String fileNameDetail =
+              StringUtils.cleanPath(Objects.requireNonNull(imageDetail.getOriginalFilename()));
+          long size = FileUtil.saveFile(uploadDir, fileNameDetail, imageDetail);
+          ImageDetail productDetailImage = new ImageDetail();
+          productDetailImage.setDescription("Description of " + fileNameDetail);
+          productDetailImage.setProduct(savedPhone.getProduct());
+          productDetailImage.setName(fileNameDetail);
+          productDetailImage.setSize(size);
+          imageDetailService.save(productDetailImage);
+        }
       }
     } catch (IOException e) {
       throw new RuntimeException("Save image filed");
@@ -81,7 +86,22 @@ public class PhoneServiceImpl implements PhoneService {
     return savedPhone;
   }
 
+  @Override
+  public Page<Phone> phonePage(
+      int numPage, String sortField, String sortDir, int size, String keyword) {
+    Pageable pageable =
+        PageRequest.of(
+            numPage,
+            size,
+            sortDir.equals("asc")
+                ? Sort.by(sortField).ascending()
+                : Sort.by(sortField).descending());
+    if (keyword != null && !keyword.trim().equals("")) {
+      return phoneRepository.searchPhone(keyword, pageable);
+    }
 
+    return phoneRepository.findAll(pageable);
+  }
 
   @Transactional
   @Override

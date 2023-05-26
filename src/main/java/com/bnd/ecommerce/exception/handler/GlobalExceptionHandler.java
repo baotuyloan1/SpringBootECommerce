@@ -2,7 +2,7 @@ package com.bnd.ecommerce.exception.handler;
 
 import com.bnd.ecommerce.exception.DeleteFailException;
 import com.bnd.ecommerce.exception.ErrorDTO;
-import com.bnd.ecommerce.exception.NotFoundException;
+import com.bnd.ecommerce.exception.ResourceNotFoundException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-  @ExceptionHandler(NotFoundException.class)
+  @ExceptionHandler(ResourceNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ResponseBody
   public ErrorDTO handleCategoryNotFound(HttpServletRequest request, Exception exception) {

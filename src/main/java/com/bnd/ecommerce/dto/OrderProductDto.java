@@ -1,2 +1,3 @@
-package com.bnd.ecommerce.dto;public class OrderProductDto {
-}
+package com.bnd.ecommerce.dto;
+
+public class OrderProductDto {}

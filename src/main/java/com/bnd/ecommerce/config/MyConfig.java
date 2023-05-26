@@ -12,12 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class MyConfig implements WebMvcConfigurer {
-  @Autowired private ProductService productService;
 
-  @Bean
-  public Supplier<ProductService> productRepositorySupplier() {
-    return () -> productService;
-  }
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {

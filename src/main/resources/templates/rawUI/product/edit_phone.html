@@ -24,7 +24,7 @@
             </tr>
             <tr>
                 <td>Old Image:</td>
-                <td><img th:src="@{${phoneDto.productDto.photoImagePath}}"/></td>
+                <td><img th:src="@{${phoneDto.photoImagePath}}"/></td>
             </tr>
             <input type="hidden" th:field="*{productDto.image}"/>
             <input type="hidden" th:field="*{productDto.id}"/>
@@ -55,7 +55,10 @@
                 <td>Category:</td>
                 <td>
                     <select th:field="*{productDto.categoryDto}">
-                        <option th:each="i : ${categoryDtoSet}" th:value="${i.id}" th:text="${i.name}"></option>
+                        <option th:each="categoryDto : ${categoryDtoList}" th:value="${categoryDto.id}" >
+                            <p th:each="i : ${#numbers.sequence(1,categoryDto.level)}"  th:if="${categoryDto.level > 0}">*</p>
+                            <span th:text="${categoryDto.name + categoryDto.id}"/>
+                        </option>
                     </select>
                 </td>
             </tr>

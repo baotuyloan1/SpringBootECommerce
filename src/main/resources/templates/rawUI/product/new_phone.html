@@ -49,7 +49,10 @@
                 <td>Category:</td>
                 <td>
                     <select th:field="*{productDto.categoryDto}">
-                        <option th:each="i : ${categoryDtoSet}" th:value="${i.id}" th:text="${i.name}"></option>
+                        <option th:each="categoryDto : ${categoryDtoList}" th:value="${categoryDto.id}" >
+                            <p th:each="i : ${#numbers.sequence(1,categoryDto.level)}"  th:if="${categoryDto.level > 0}">*</p>
+                            <span th:text="${categoryDto.name }"/>
+                        </option>
                     </select>
                 </td>
             </tr>

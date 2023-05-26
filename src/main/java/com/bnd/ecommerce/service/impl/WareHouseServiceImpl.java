@@ -2,7 +2,7 @@ package com.bnd.ecommerce.service.impl;
 
 import com.bnd.ecommerce.dto.WarehouseDto;
 import com.bnd.ecommerce.entity.stock.Warehouse;
-import com.bnd.ecommerce.exception.NotFoundException;
+import com.bnd.ecommerce.exception.ResourceNotFoundException;
 import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.repository.WareHouseRepository;
 import com.bnd.ecommerce.service.WareHouseService;
@@ -54,7 +54,7 @@ public class WareHouseServiceImpl implements WareHouseService {
     Optional<Warehouse> warehouse = wareHouseRepository.findById(id);
     if(warehouse.isPresent()){
       return mapStructMapper.wareHouseToWareHouseDto(warehouse.get());
-    }else throw new NotFoundException("Warehouse not found");
+    }else throw new ResourceNotFoundException("Warehouse not found");
   }
 
   @Override

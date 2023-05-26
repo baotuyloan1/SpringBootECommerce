@@ -10,6 +10,7 @@
     <br/>
     <form th:action="@{'/rawUI/brands/updateBrand/'+${brand.id}}" th:object="${brand}" method="post">
         <table th:border="0" th:cellpadding="10">
+            <input type="hidden" th:field="*{createTime}">
             <tr>
                 <td><label>Brand name:
                     <input type="text" th:field="*{name}"/>

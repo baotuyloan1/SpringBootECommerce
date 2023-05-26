@@ -1,14 +1,15 @@
 package com.bnd.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 
 @Entity
 @Table
 public class Phone {
 
-
   @Id private long productId;
 
+  @JsonBackReference
   @MapsId
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "product_id", referencedColumnName = "id")

@@ -3,7 +3,7 @@ package com.bnd.ecommerce.service.impl;
 import com.bnd.ecommerce.dto.BrandDto;
 import com.bnd.ecommerce.entity.Brand;
 import com.bnd.ecommerce.exception.DeleteFailException;
-import com.bnd.ecommerce.exception.NotFoundException;
+import com.bnd.ecommerce.exception.ResourceNotFoundException;
 import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.repository.BrandRepository;
 import com.bnd.ecommerce.service.BrandService;
@@ -49,21 +49,13 @@ public class BrandServiceImpl implements BrandService {
     if (brand.isPresent()) {
       return mapStructMapper.brandToBrandDto(brand.get());
     } else {
-      throw new NotFoundException("Brand Not found");
+      throw new ResourceNotFoundException("Brand Not found");
     }
   }
 
   @Override
   public Brand saveBrand(BrandDto brandDto) {
     Brand brand = mapStructMapper.brandDtoToBrand(brandDto);
-    if (brand.getId() > 0) {
-      Optional<Brand> foundBrand = brandRepository.findById(brand.getId());
-      if (foundBrand.isPresent()) {
-        brand.setCreateTime(foundBrand.get().getCreateTime());
-      } else {
-        throw new NotFoundException("Brand not found to update");
-      }
-    }
     return brandRepository.save(brand);
   }
 
@@ -81,10 +73,9 @@ public class BrandServiceImpl implements BrandService {
 
   @Override
   public Brand findById(int id) {
-    Optional<Brand> foundBrand = brandRepository.findById(id);
-    if (foundBrand.isPresent()) {
-      return foundBrand.get();
-    } else throw new NotFoundException("Can't find Brand with " + id);
+    return brandRepository
+        .findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Brand not found"));
   }
 
   @Override

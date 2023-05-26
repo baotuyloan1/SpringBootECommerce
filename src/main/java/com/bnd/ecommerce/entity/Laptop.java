@@ -2,6 +2,7 @@ package com.bnd.ecommerce.entity;
 
 import com.bnd.ecommerce.entity.CreateUpdateTimeStamp;
 import com.bnd.ecommerce.entity.Product;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -34,6 +35,7 @@ public class Laptop extends CreateUpdateTimeStamp {
     @Valid
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
+    @JsonBackReference
     private Product product;
 
     public int getReleaseYear() {

@@ -5,7 +5,7 @@ import com.bnd.ecommerce.dto.EmployeeUpdateDto;
 import com.bnd.ecommerce.entity.employee.Employee;
 import com.bnd.ecommerce.entity.employee.EmployeeLog;
 import com.bnd.ecommerce.enums.LogTypeEmployee;
-import com.bnd.ecommerce.exception.NotFoundException;
+import com.bnd.ecommerce.exception.ResourceNotFoundException;
 import com.bnd.ecommerce.mapper.MapStructMapper;
 import com.bnd.ecommerce.repository.EmployeeRepository;
 import com.bnd.ecommerce.service.EmployeeService;
@@ -91,12 +91,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   @Override
   public Employee findById(Long id) {
-    Optional<Employee> foundEmployee = employeeRepository.findById(id);
-    if (foundEmployee.isPresent()) {
-      return foundEmployee.get();
-    } else {
-      throw new NotFoundException("Employee with id wasn't found");
-    }
+    return employeeRepository
+        .findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
   }
 
   @Transactional
@@ -126,7 +123,7 @@ public class EmployeeServiceImpl implements EmployeeService {
       employeeServiceLog.save(employeeLog);
       return employeeRepository.save(savedEmployee);
     } else {
-      throw new NotFoundException("Updated Employee wasn't found !!!");
+      throw new ResourceNotFoundException("Updated Employee wasn't found !!!");
     }
   }
 
